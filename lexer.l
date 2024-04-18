@@ -42,11 +42,11 @@ ID	[a-zA-z][a-zA-z0-9_]*
     /* mathematical operators */
 "+"         {return PLUS;}
 "-"         {return MINUS;}
-"*"         {return MULTIPLY;}
-"/"         {return DIVIDE;}
-"%"         {return MODULO;}
-"++"        {return INCREMENT;}
-"--"        {return DECREMENT;}
+"*"         {return MUL;}
+"/"         {return DIV;}
+"%"         {return MOD;}
+"++"        {return INC;}
+"--"        {return DEC;}
 
     /* assignment operators */
 "="         {return ASSIGN;}
@@ -57,12 +57,12 @@ ID	[a-zA-z][a-zA-z0-9_]*
 "%="        {return MOD_ASSIGN;}
 
     /* relational operators */
-"=="        {return EQUAL;}
-"!="        {return NOT_EQUAL;}
-">"         {return GREATER;}
-">="        {return GREATER_EQUAL;}
-"<"         {return LESS;}
-"<="        {return LESS_EQUAL;}
+"=="        {return EQ;}
+"!="        {return NEQ;}
+">"         {return GT;}
+">="        {return GTE;}
+"<"         {return LT;}
+"<="        {return LTE;}
 
     /* logical operators */
 "&&"        {return AND;}
@@ -70,9 +70,9 @@ ID	[a-zA-z][a-zA-z0-9_]*
 "!"         {return NOT;}
 
     /* bitwise operators */
-"&"         {return BITWISE_AND;}
-"|"         {return BITWISE_OR;}
-"^"         {return BITWISE_XOR;}
+"&"         {return BIT_AND;}
+"|"         {return BIT_OR;}
+"^"         {return BIT_XOR;}
 
     /* semicolon and comma */
 [;:,]       {return yytext[0];}
