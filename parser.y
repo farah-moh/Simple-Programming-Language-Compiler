@@ -59,8 +59,3 @@
 %token <cval> CHAR_CONST
 
     /* grammar */
-%start program
-
-%%
-
-%%

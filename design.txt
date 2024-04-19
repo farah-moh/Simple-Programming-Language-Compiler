@@ -1,0 +1,72 @@
+
+variables (identifiers): [a-zA-Z_][a-zA-Z_0-9]*
+
+mathematical operators: [done]
+
+sum 		+
+diff 		-
+mul			*
+div			/
+mod 		%
+inc 		++
+dec			--
+equal		=
+plus equal	+=
+minus equal	-=
+and			&
+or			|
+
+
+comparison operators: [done]
+
+equal		==
+not equal	!=
+greater		>
+g or equal	>=
+less		<
+l or equal	<=
+
+
+logical operators: [done]
+
+&&			and
+||			or
+!			not
+
+loops: [done]
+
+do {} while()
+for() {}
+while() {}
+
+if statements: [done]
+
+if() {}
+else if() {}
+else {}
+
+switch() {case (): }
+
+
+functions:
+
+returnType funcName(args) {}
+
+types: [done]
+
+float
+int
+char
+string
+bool
+const
+void
+
+boolean constants [done]
+
+true 
+false
+
+comments: [done]
+
+// 
