@@ -4,6 +4,8 @@
     #include <string.h>
 %}
 
+%option yylineno
+
     /* defines */
 
 ID	[a-zA-z][a-zA-z0-9_]*

@@ -261,9 +261,13 @@ static void yy_flex_free YY_PROTO(( void * ));
 
 #define YY_AT_BOL() (yy_current_buffer->yy_at_bol)
 
+
+#define YY_USES_REJECT
 typedef unsigned char YY_CHAR;
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
 typedef int yy_state_type;
+extern int yylineno;
+int yylineno = 1;
 extern char *yytext;
 #define yytext_ptr yytext
 
@@ -284,23 +288,50 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 
 #define YY_NUM_RULES 56
 #define YY_END_OF_BUFFER 57
-static yyconst short int yy_accept[138] =
+static yyconst short int yy_acclist[209] =
     {   0,
-        0,    0,   57,   55,   53,   53,   42,   55,   25,   43,
-       55,   23,   21,   46,   22,   24,   48,   48,   38,   28,
-       36,   47,   47,   45,   47,   47,   47,   47,   47,   47,
-       47,   47,   47,   47,   47,   44,   35,    0,   50,   33,
-       40,    0,   31,   26,   29,   27,   30,   52,   32,    0,
-       48,   39,   34,   37,   47,    0,   47,   47,   47,   47,
-       47,   47,    6,   47,   47,   47,   47,    1,   47,   47,
-       47,   47,   47,   47,   47,   41,   51,   52,   49,    0,
-       47,   47,   47,   47,   47,   47,   47,   47,   47,    8,
-       13,   47,   47,   47,   47,   47,   47,    0,   17,   47,
+       57,   55,   56,   53,   55,   56,   53,   56,   42,   55,
+       56,   55,   56,   25,   55,   56,   43,   55,   56,   55,
+       56,   23,   55,   56,   21,   55,   56,   46,   55,   56,
+       22,   55,   56,   24,   55,   56,   48,   55,   56,   48,
+       55,   56,   38,   55,   56,   28,   55,   56,   36,   55,
+       56,   47,   55,   56,   47,   55,   56,   45,   47,   55,
+       56,   47,   55,   56,   47,   55,   56,   47,   55,   56,
+       47,   55,   56,   47,   55,   56,   47,   55,   56,   47,
+       55,   56,   47,   55,   56,   47,   55,   56,   47,   55,
+       56,   47,   55,   56,   44,   55,   56,   35,   50,   33,
 
-        4,   15,   47,   47,   47,    2,   47,   47,   47,   47,
-       47,   19,   18,   47,    0,    9,   12,   47,   47,   20,
-       14,   47,   47,   47,    7,    0,   47,   47,   11,   16,
-        3,    0,   47,    5,   54,   10,    0
+       40,   31,   26,   29,   27,   30,   52,   32,   48,   39,
+       34,   37,   47,   47,   47,   47,   47,   47,   47,    6,
+       47,   47,   47,   47,   47,    1,   47,   47,   47,   47,
+       47,   47,   47,   47,   41,   51,   52,   49,   47,   47,
+       47,   47,   47,   47,   47,   47,   47,    8,   47,   13,
+       47,   47,   47,   47,   47,   47,   47,   17,   47,   47,
+        4,   47,   15,   47,   47,   47,   47,    2,   47,   47,
+       47,   47,   47,   47,   19,   47,   18,   47,   47,    9,
+       47,   12,   47,   47,   47,   20,   47,   14,   47,   47,
+       47,   47,    7,   47,   47,   47,   11,   47,   16,   47,
+
+        3,   47,   47,    5,   47,   54,   10,   47
+    } ;
+
+static yyconst short int yy_accept[139] =
+    {   0,
+        1,    1,    1,    2,    4,    7,    9,   12,   14,   17,
+       20,   22,   25,   28,   31,   34,   37,   40,   43,   46,
+       49,   52,   55,   58,   62,   65,   68,   71,   74,   77,
+       80,   83,   86,   89,   92,   95,   98,   99,   99,  100,
+      101,  102,  102,  103,  104,  105,  106,  107,  108,  109,
+      109,  110,  111,  112,  113,  114,  114,  115,  116,  117,
+      118,  119,  120,  122,  123,  124,  125,  126,  128,  129,
+      130,  131,  132,  133,  134,  135,  136,  137,  138,  139,
+      139,  140,  141,  142,  143,  144,  145,  146,  147,  148,
+      150,  152,  153,  154,  155,  156,  157,  158,  158,  160,
+
+      161,  163,  165,  166,  167,  168,  170,  171,  172,  173,
+      174,  175,  177,  179,  180,  180,  182,  184,  185,  186,
+      188,  190,  191,  192,  193,  195,  195,  196,  197,  199,
+      201,  203,  203,  204,  206,  207,  209,  209
     } ;
 
 static yyconst int yy_ec[256] =
@@ -440,13 +471,16 @@ static yyconst short int yy_chk[213] =
       137,  137
     } ;
 
-static yy_state_type yy_last_accepting_state;
-static char *yy_last_accepting_cpos;
-
-/* The intent behind this definition is that it'll catch
- * any uses of REJECT which flex missed.
- */
-#define REJECT reject_used_but_not_detected
+static yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;
+static char *yy_full_match;
+static int yy_lp;
+#define REJECT \
+{ \
+*yy_cp = yy_hold_char; /* undo effects of setting up yytext */ \
+yy_cp = yy_full_match; /* restore poss. backed-over text */ \
+++yy_lp; \
+goto find_rule; \
+}
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
@@ -458,7 +492,7 @@ char *yytext;
     #include <stdio.h>
     #include <string.h>
 /* defines */
-#line 462 "lex.yy.c"
+#line 496 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -609,11 +643,11 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 11 "lexer.l"
+#line 13 "lexer.l"
 
 
     /* keywords */
-#line 617 "lex.yy.c"
+#line 651 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -652,15 +686,12 @@ YY_DECL
 		yy_bp = yy_cp;
 
 		yy_current_state = yy_start;
+		yy_state_ptr = yy_state_buf;
+		*yy_state_ptr++ = yy_current_state;
 yy_match:
 		do
 			{
 			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
-			if ( yy_accept[yy_current_state] )
-				{
-				yy_last_accepting_state = yy_current_state;
-				yy_last_accepting_cpos = yy_cp;
-				}
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
@@ -668,333 +699,344 @@ yy_match:
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
+			*yy_state_ptr++ = yy_current_state;
 			++yy_cp;
 			}
 		while ( yy_base[yy_current_state] != 165 );
 
 yy_find_action:
-		yy_act = yy_accept[yy_current_state];
-		if ( yy_act == 0 )
-			{ /* have to back up */
-			yy_cp = yy_last_accepting_cpos;
-			yy_current_state = yy_last_accepting_state;
-			yy_act = yy_accept[yy_current_state];
+		yy_current_state = *--yy_state_ptr;
+		yy_lp = yy_accept[yy_current_state];
+find_rule: /* we branch to this label when backing up */
+		for ( ; ; ) /* until we find what rule we matched */
+			{
+			if ( yy_lp && yy_lp < yy_accept[yy_current_state + 1] )
+				{
+				yy_act = yy_acclist[yy_lp];
+					{
+					yy_full_match = yy_cp;
+					break;
+					}
+				}
+			--yy_cp;
+			yy_current_state = *--yy_state_ptr;
+			yy_lp = yy_accept[yy_current_state];
 			}
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					++yylineno;
+			}
 
 do_action:	/* This label is used only to access EOF actions. */
 
 
 		switch ( yy_act )
 	{ /* beginning of action switch */
-			case 0: /* must back up */
-			/* undo the effects of YY_DO_BEFORE_ACTION */
-			*yy_cp = yy_hold_char;
-			yy_cp = yy_last_accepting_cpos;
-			yy_current_state = yy_last_accepting_state;
-			goto yy_find_action;
-
 case 1:
 YY_RULE_SETUP
-#line 14 "lexer.l"
+#line 16 "lexer.l"
 {return IF;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 15 "lexer.l"
+#line 17 "lexer.l"
 {return ELSE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 16 "lexer.l"
+#line 18 "lexer.l"
 {return SWITCH;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 17 "lexer.l"
+#line 19 "lexer.l"
 {return CASE;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 18 "lexer.l"
+#line 20 "lexer.l"
 {return DEFAULT;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 20 "lexer.l"
+#line 22 "lexer.l"
 {return DO;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 21 "lexer.l"
+#line 23 "lexer.l"
 {return WHILE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 22 "lexer.l"
+#line 24 "lexer.l"
 {return FOR;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 23 "lexer.l"
+#line 25 "lexer.l"
 {return BREAK;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 24 "lexer.l"
+#line 26 "lexer.l"
 {return CONTINUE;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 26 "lexer.l"
+#line 28 "lexer.l"
 {return RETURN;}
 	YY_BREAK
 /* data types */
 case 12:
 YY_RULE_SETUP
-#line 30 "lexer.l"
+#line 32 "lexer.l"
 {return CONST;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 31 "lexer.l"
+#line 33 "lexer.l"
 {return INT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 32 "lexer.l"
+#line 34 "lexer.l"
 {return FLOAT;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 33 "lexer.l"
+#line 35 "lexer.l"
 {return CHAR;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 34 "lexer.l"
+#line 36 "lexer.l"
 {return STRING;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 35 "lexer.l"
+#line 37 "lexer.l"
 {return BOOL;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 36 "lexer.l"
+#line 38 "lexer.l"
 {return VOID;}
 	YY_BREAK
 /* boolean values */
 case 19:
 YY_RULE_SETUP
-#line 39 "lexer.l"
+#line 41 "lexer.l"
 {return TRUE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 40 "lexer.l"
+#line 42 "lexer.l"
 {return FALSE;}
 	YY_BREAK
 /* mathematical operators */
 case 21:
 YY_RULE_SETUP
-#line 43 "lexer.l"
+#line 45 "lexer.l"
 {return PLUS;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 44 "lexer.l"
+#line 46 "lexer.l"
 {return MINUS;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 45 "lexer.l"
-{return MULTIPLY;}
+#line 47 "lexer.l"
+{return MUL;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 46 "lexer.l"
-{return DIVIDE;}
+#line 48 "lexer.l"
+{return DIV;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 47 "lexer.l"
-{return MODULO;}
+#line 49 "lexer.l"
+{return MOD;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 48 "lexer.l"
-{return INCREMENT;}
+#line 50 "lexer.l"
+{return INC;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 49 "lexer.l"
-{return DECREMENT;}
+#line 51 "lexer.l"
+{return DEC;}
 	YY_BREAK
 /* assignment operators */
 case 28:
 YY_RULE_SETUP
-#line 52 "lexer.l"
+#line 54 "lexer.l"
 {return ASSIGN;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 53 "lexer.l"
+#line 55 "lexer.l"
 {return ADD_ASSIGN;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 54 "lexer.l"
+#line 56 "lexer.l"
 {return SUB_ASSIGN;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 55 "lexer.l"
+#line 57 "lexer.l"
 {return MUL_ASSIGN;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 56 "lexer.l"
+#line 58 "lexer.l"
 {return DIV_ASSIGN;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 57 "lexer.l"
+#line 59 "lexer.l"
 {return MOD_ASSIGN;}
 	YY_BREAK
 /* relational operators */
 case 34:
 YY_RULE_SETUP
-#line 60 "lexer.l"
-{return EQUAL;}
+#line 62 "lexer.l"
+{return EQ;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 61 "lexer.l"
-{return NOT_EQUAL;}
+#line 63 "lexer.l"
+{return NEQ;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 62 "lexer.l"
-{return GREATER;}
+#line 64 "lexer.l"
+{return GT;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 63 "lexer.l"
-{return GREATER_EQUAL;}
+#line 65 "lexer.l"
+{return GTE;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 64 "lexer.l"
-{return LESS;}
+#line 66 "lexer.l"
+{return LT;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 65 "lexer.l"
-{return LESS_EQUAL;}
+#line 67 "lexer.l"
+{return LTE;}
 	YY_BREAK
 /* logical operators */
 case 40:
 YY_RULE_SETUP
-#line 68 "lexer.l"
+#line 70 "lexer.l"
 {return AND;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 69 "lexer.l"
+#line 71 "lexer.l"
 {return OR;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 70 "lexer.l"
+#line 72 "lexer.l"
 {return NOT;}
 	YY_BREAK
 /* bitwise operators */
 case 43:
 YY_RULE_SETUP
-#line 73 "lexer.l"
-{return BITWISE_AND;}
+#line 75 "lexer.l"
+{return BIT_AND;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 74 "lexer.l"
-{return BITWISE_OR;}
+#line 76 "lexer.l"
+{return BIT_OR;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 75 "lexer.l"
-{return BITWISE_XOR;}
+#line 77 "lexer.l"
+{return BIT_XOR;}
 	YY_BREAK
 /* semicolon and comma */
 case 46:
 YY_RULE_SETUP
-#line 78 "lexer.l"
+#line 80 "lexer.l"
 {return yytext[0];}
 	YY_BREAK
 /* identifiers */
 case 47:
 YY_RULE_SETUP
-#line 81 "lexer.l"
+#line 83 "lexer.l"
 {yylval.sval = strdup(yytext); return ID;}
 	YY_BREAK
 /* constants */
 case 48:
 YY_RULE_SETUP
-#line 84 "lexer.l"
+#line 86 "lexer.l"
 {yylval.ival = atoi(yytext); return INT_CONST;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 85 "lexer.l"
+#line 87 "lexer.l"
 {yylval.fval = atof(yytext); return FLOAT_CONST;}
 	YY_BREAK
 /* strings */
 case 50:
 YY_RULE_SETUP
-#line 88 "lexer.l"
+#line 90 "lexer.l"
 {yylval.sval = strdup(yytext); return STRING_CONST;}
 	YY_BREAK
 /* characters */
 case 51:
 YY_RULE_SETUP
-#line 91 "lexer.l"
+#line 93 "lexer.l"
 {yylval.cval = yytext[1]; return CHAR_CONST;}
 	YY_BREAK
 /* comments */
 case 52:
 YY_RULE_SETUP
-#line 94 "lexer.l"
+#line 96 "lexer.l"
 {return COMMENT;}
 	YY_BREAK
 /* whitespace */
 case 53:
 YY_RULE_SETUP
-#line 97 "lexer.l"
+#line 99 "lexer.l"
 {;}
 	YY_BREAK
 /* parentheses */
 case 54:
 YY_RULE_SETUP
-#line 100 "lexer.l"
+#line 102 "lexer.l"
 {return yytext[0];}
 	YY_BREAK
 /* error */
 case 55:
 YY_RULE_SETUP
-#line 103 "lexer.l"
+#line 105 "lexer.l"
 {printf("Error: Unrecognized token %s\n", yytext); exit(1);}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 104 "lexer.l"
+#line 106 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 996 "lex.yy.c"
-case YY_STATE_EOF(INITIAL):
-	yyterminate();
+#line 1038 "lex.yy.c"
+			case YY_STATE_EOF(INITIAL):
+				yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1272,15 +1314,12 @@ static yy_state_type yy_get_previous_state()
 	register char *yy_cp;
 
 	yy_current_state = yy_start;
+	yy_state_ptr = yy_state_buf;
+	*yy_state_ptr++ = yy_current_state;
 
 	for ( yy_cp = yytext_ptr + YY_MORE_ADJ; yy_cp < yy_c_buf_p; ++yy_cp )
 		{
 		register YY_CHAR yy_c = (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 1);
-		if ( yy_accept[yy_current_state] )
-			{
-			yy_last_accepting_state = yy_current_state;
-			yy_last_accepting_cpos = yy_cp;
-			}
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
@@ -1288,6 +1327,7 @@ static yy_state_type yy_get_previous_state()
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
+		*yy_state_ptr++ = yy_current_state;
 		}
 
 	return yy_current_state;
@@ -1308,14 +1348,8 @@ yy_state_type yy_current_state;
 #endif
 	{
 	register int yy_is_jam;
-	register char *yy_cp = yy_c_buf_p;
 
 	register YY_CHAR yy_c = 1;
-	if ( yy_accept[yy_current_state] )
-		{
-		yy_last_accepting_state = yy_current_state;
-		yy_last_accepting_cpos = yy_cp;
-		}
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
@@ -1324,6 +1358,8 @@ yy_state_type yy_current_state;
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 	yy_is_jam = (yy_current_state == 137);
+	if ( ! yy_is_jam )
+		*yy_state_ptr++ = yy_current_state;
 
 	return yy_is_jam ? 0 : yy_current_state;
 	}
@@ -1366,6 +1402,8 @@ register char *yy_bp;
 
 	*--yy_cp = (char) c;
 
+	if ( c == '\n' )
+		--yylineno;
 
 	yytext_ptr = yy_bp;
 	yy_hold_char = *yy_cp;
@@ -1442,6 +1480,8 @@ static int input()
 	*yy_c_buf_p = '\0';	/* preserve yytext */
 	yy_hold_char = *++yy_c_buf_p;
 
+	if ( c == '\n' )
+		++yylineno;
 
 	return c;
 	}
@@ -1878,7 +1918,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 104 "lexer.l"
+#line 106 "lexer.l"
 
 
 int yywrap(void) {
