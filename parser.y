@@ -259,11 +259,11 @@ literal :
 %%
 
 /* Error handling */
-void yyerror(char const *s){
-    extern int yylineno;
-    fprintf(stderr, "%s near line %d\n", s, yylineno);
-    exit(-1);
+void yyerror(char *msg){
+  fprintf(stderr, "%s\n", msg);
+  exit(1);
 }
+
 
 int main(){
     yyparse();

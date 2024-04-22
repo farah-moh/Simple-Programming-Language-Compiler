@@ -941,11 +941,11 @@ case 7:
     break;}
 case 8:
 #line 79 "parser.y"
-{;
+{ printf("Function_definition\n"); ;
     break;}
 case 9:
 #line 80 "parser.y"
-{;
+{ printf("Function_call\n"); ;
     break;}
 case 10:
 #line 81 "parser.y"
@@ -1397,11 +1397,11 @@ yyerrhandle:
 
 
 /* Error handling */
-void yyerror(char const *s){
-    extern int yylineno;
-    fprintf(stderr, "%s near line %d\n", s, yylineno);
-    exit(-1);
+void yyerror(char *msg){
+  fprintf(stderr, "%s\n", msg);
+  exit(1);
 }
+
 
 int main(){
     yyparse();
