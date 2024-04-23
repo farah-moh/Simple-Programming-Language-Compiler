@@ -1,39 +1,61 @@
  
+Input: x = y; 
+---------- 
+Output: 
+syntax error
+File Error
+======================================== 
 Input: int x = 0; 
 ---------- 
 Output: 
+File Error
 Initialization
 ======================================== 
 Input: for ( int i = 0; i < 10; i+=1 ) { x += i; } 
 ---------- 
 Output: 
+File Error
+For loop start
+LT
+ADD_ASSIGN
+ADD_ASSIGN
 Assignment
-For_loop
+For loop end
 ======================================== 
 Input: do { x+=1; } while ( x < 100 ); 
 ---------- 
 Output: 
+File Error
+Do while loop start
+ADD_ASSIGN
 Assignment
-Do_loop
+LT
+Do while loop end
 ======================================== 
 Input: float y 
 ---------- 
 Output: 
 syntax error
+File Error
 ======================================== 
 Input: float y; 
 ---------- 
 Output: 
+File Error
 Declaration
 ======================================== 
 Input: if(1){call();} 
 ---------- 
 Output: 
+File Error
+If statement start
 Function_call
-If_statement
+If statement end
 ======================================== 
 Input: switch (x) {default: break;} 
 ---------- 
 Output: 
-Switch_statement
+File Error
+Switch case start
+Switch case end
 ======================================== 

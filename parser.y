@@ -4,6 +4,7 @@
 #include <string.h>
 
 void yyerror(char* s);
+int yylex();
 
 _Bool inFunction = 0;
 %}
@@ -56,6 +57,7 @@ _Bool inFunction = 0;
 %left   MUL DIV MOD
 %right  NOT
 %left   INC DEC
+%left FUNC
 
 /* Other tokens */
 %token <id> ID
@@ -76,18 +78,32 @@ program :
 
 statement :
         declaration ';'             { printf("Declaration\n"); }
-        | initialization ';'        { printf("Initialization\n"); }
-        | assignment ';'            { printf("Assignment\n"); }
-        | { printf("If statement start\n"); }   if_statement              { printf("If statement end\n"); }
-        | { printf("Switch case start\n"); }    switch_statement          { printf("Switch case end\n"); }
-        | { printf("Do while loop start\n"); }  do_loop ';'               { printf("Do while loop end\n"); }
-        | { printf("While loop start\n"); }     while_loop                { printf("While loop end\n"); }
-        | { printf("For loop start\n"); }       for_loop                  { printf("For loop end\n"); }
-        | function_definition       { printf("Function_definition\n"); }
-        | function_call ';'         { printf("Function_call\n"); }
-        | return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
-        | ID ';'                    { printf("ID\n"); }
-        | { printf("Scope start\n"); }          '{' program '}'           { printf("Scope end\n"); }
+        | 
+        initialization ';'        { printf("Initialization\n"); }
+        | 
+        assignment ';'            { printf("Assignment\n"); }
+        | 
+        unary_expression ';'      { printf("Unary Expression\n"); }
+        | 
+        { printf("If statement start\n"); }   if_statement              { printf("If statement end\n"); }
+        | 
+        { printf("Switch case start\n"); }    switch_statement          { printf("Switch case end\n"); }
+        | 
+        { printf("Do while loop start\n"); }  do_loop ';'               { printf("Do while loop end\n"); }
+        | 
+        { printf("While loop start\n"); }     while_loop                { printf("While loop end\n"); }
+        | 
+        { printf("For loop start\n"); }       for_loop                  { printf("For loop end\n"); }
+        | 
+        function_definition       { printf("Function_definition\n"); }
+        | 
+        function_call ';'         { printf("Function_call\n"); }
+        | 
+        return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
+        | 
+        ID ';'                    { printf("ID\n"); }
+        | 
+        { printf("Scope start\n"); }          '{' program '}'           { printf("Scope end\n"); }
         ;
 
 do_loop :
@@ -109,7 +125,7 @@ for_loop_initialization :
 for_loop_condition :
     expression            {;}
     |
-                    {;}
+                          {;}
     ;
 
 for_loop_increment :
@@ -117,7 +133,7 @@ for_loop_increment :
     |
     assignment            {;}
     |
-                    {;}
+                          {;}
     ;
 
 while_loop :
@@ -147,7 +163,7 @@ function_parameters :
     ;
 
 function_parameter:
-    type ID {;}
+    type ID             {;}
     ;
 
 return_statement :
@@ -159,33 +175,33 @@ return_statement :
     ;
 
 function_call : 
-    ID '(' function_arguments_optional ')'                      {;}
+    ID '(' function_arguments_optional ')'                      %prec FUNC{;}
     |
-    ID ASSIGN ID '(' function_arguments_optional ')'            {;}
+    assignment '(' function_arguments_optional ')'            %prec FUNC{;}
     |
-    type ID ASSIGN ID '(' function_arguments_optional ')'       {;}
+    initialization '(' function_arguments_optional ')'       %prec FUNC{;}
     ;
 
 function_arguments_optional :
-    function_arguments              {;}
+    function_arguments      {;}
     |
-                                    {;}
+                            {;}
     ;
 
 function_arguments :
-    function_arguments ',' function_argument  {;}
+    function_arguments ',' function_argument    {;}
     |
-    function_argument
+    function_argument                           {;}
     ;
 
 function_argument :
-    literal                              {;}
+    literal            {;}
     ;
 
 if_statement :
     IF '(' expression ')' '{' program '}'                                {;}
     |
-    IF '(' expression ')' '{' program '}' ELSE '{' program '}'        {;}
+    IF '(' expression ')' '{' program '}' ELSE '{' program '}'           {;}
     ;
 
 switch_statement :
@@ -227,33 +243,33 @@ declaration :
     ;
 
 assignment :
-    ID assign expression     {;}
+    ID assign expression     %prec ASSIGN{;}
     ;
 
 assign :
-    ASSIGN          { printf("ASSIGN\n") }
+    ASSIGN          { printf("ASSIGN\n"); }
     |
-    ADD_ASSIGN      { printf("ADD_ASSIGN\n") }
+    ADD_ASSIGN      { printf("ADD_ASSIGN\n"); }
     |
-    SUB_ASSIGN      { printf("SUB_ASSIGN\n") }
+    SUB_ASSIGN      { printf("SUB_ASSIGN\n"); }
     |
-    MUL_ASSIGN      { printf("MUL_ASSIGN\n") }
+    MUL_ASSIGN      { printf("MUL_ASSIGN\n"); }
     |
-    DIV_ASSIGN      { printf("DIV_ASSIGN\n") }
+    DIV_ASSIGN      { printf("DIV_ASSIGN\n"); }
     |
-    MOD_ASSIGN      { printf("MOD_ASSIGN\n") }
+    MOD_ASSIGN      { printf("MOD_ASSIGN\n"); }
     ;
 
 type :
-    INT         { printf("INT\n") }
+    INT         { ; }
     |
-    FLOAT       { printf("FLOAT\n") }
+    FLOAT       { ; }
     |
-    CHAR        { printf("CHAR\n") }
+    CHAR        { ; }
     |
-    STRING      { printf("STRING\n") }
+    STRING      { ; }
     |
-    BOOL        { printf("BOOL\n") }
+    BOOL        { ; }
     ;
 
 evaluate_expression :
@@ -269,13 +285,13 @@ evaluate_expression :
     |
     evaluate_expression MUL evaluate_expression             { printf("MUL\n"); }
     |
-    evaluate_expression DIV evaluate_expression             { printf("DIV\n") }
+    evaluate_expression DIV evaluate_expression             { printf("DIV\n"); }
     |
-    evaluate_expression MOD evaluate_expression             { printf("MOD\n") }
+    evaluate_expression MOD evaluate_expression             { printf("MOD\n"); }
     |
-    evaluate_expression INC                                 { printf("INC") }
+    evaluate_expression INC                                 { printf("INC\n"); }
     |
-    evaluate_expression DEC                                 { printf("DEC\n") }
+    evaluate_expression DEC                                 { printf("DEC\n"); }
     |
     '(' evaluate_expression ')'                             {;}
     |
@@ -320,11 +336,18 @@ condition :
     '(' condition ')'                           {;}
     ;
 
-expression :
-    math_or_value           {;}
+unary_expression:
+    ID INC      {;}
     |
-    condition               {;}
+    ID DEC      {;}
     ;
+
+expression :
+    math_or_value                                    {;}
+    |
+    condition                                        {;}
+    ;
+
 
 literal :
     ID                          {;}
@@ -350,7 +373,18 @@ void yyerror(char *msg){
 }
 
 
-int main(){
+int main(int argc, char *argv[]){
+
+    extern FILE* yyin;
+    char* filename = argv[1];
+    FILE* file = fopen(filename,"r");
+    if(!file)
+    {
+        printf("File Error\n");
+    }
+    yyin = file;
+
     yyparse();
+
     return 0;
 }
