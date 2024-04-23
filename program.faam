@@ -1,0 +1,51 @@
+int sum(int x, int y) {
+    return x + y; 
+}
+
+int main() {
+    int num = 5;
+    int result = sum(num);
+    
+    int x;
+    x = 10;
+    int y = x + 5;
+    char z = 0
+    
+    if (x > y) {
+        x = y
+    } else {
+        y = x
+    }
+
+    
+    int option = 2;
+    switch (option) {
+        case 1:
+            x++;
+            break;
+        case 2:
+            y++;
+            break;
+        default:
+            z++;
+            break;
+    }
+    
+    int counter = 0;
+    do {
+        counter++;
+    } while (counter < 5);
+    
+    int j = 0;
+    while (j < 5) {
+        j++;
+    }
+
+    int sum = sum(5, 10);
+
+    for (int k = 0; k < 5; k++) {
+        sum++;
+    }
+    
+    return 0;
+}

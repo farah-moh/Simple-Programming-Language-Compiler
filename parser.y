@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+void yyerror(char* s);
+
 _Bool inFunction = 0;
 %}
 
@@ -76,16 +78,16 @@ statement :
         declaration ';'             { printf("Declaration\n"); }
         | initialization ';'        { printf("Initialization\n"); }
         | assignment ';'            { printf("Assignment\n"); }
-        | if_statement              { printf("If_statement\n"); }
-        | switch_statement          { printf("Switch_statement\n"); }
-        | do_loop ';'               { printf("Do_loop\n"); }
-        | while_loop                { printf("While_loop\n"); }
-        | for_loop                  { printf("For_loop\n"); }
+        | { printf("If statement start\n"); }   if_statement              { printf("If statement end\n"); }
+        | { printf("Switch case start\n"); }    switch_statement          { printf("Switch case end\n"); }
+        | { printf("Do while loop start\n"); }  do_loop ';'               { printf("Do while loop end\n"); }
+        | { printf("While loop start\n"); }     while_loop                { printf("While loop end\n"); }
+        | { printf("For loop start\n"); }       for_loop                  { printf("For loop end\n"); }
         | function_definition       { printf("Function_definition\n"); }
         | function_call ';'         { printf("Function_call\n"); }
         | return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
         | ID ';'                    { printf("ID\n"); }
-        | '{' program '}'           { printf("Scope\n"); }
+        | { printf("Scope start\n"); }          '{' program '}'           { printf("Scope end\n"); }
         ;
 
 do_loop :
@@ -229,51 +231,51 @@ assignment :
     ;
 
 assign :
-    ASSIGN          {;}
+    ASSIGN          { printf("ASSIGN\n") }
     |
-    ADD_ASSIGN      {;}
+    ADD_ASSIGN      { printf("ADD_ASSIGN\n") }
     |
-    SUB_ASSIGN      {;}
+    SUB_ASSIGN      { printf("SUB_ASSIGN\n") }
     |
-    MUL_ASSIGN      {;}
+    MUL_ASSIGN      { printf("MUL_ASSIGN\n") }
     |
-    DIV_ASSIGN      {;}
+    DIV_ASSIGN      { printf("DIV_ASSIGN\n") }
     |
-    MOD_ASSIGN      {;}
+    MOD_ASSIGN      { printf("MOD_ASSIGN\n") }
     ;
 
 type :
-    INT         {;}
+    INT         { printf("INT\n") }
     |
-    FLOAT       {;}
+    FLOAT       { printf("FLOAT\n") }
     |
-    CHAR        {;}
+    CHAR        { printf("CHAR\n") }
     |
-    STRING      {;}
+    STRING      { printf("STRING\n") }
     |
-    BOOL        {;}
+    BOOL        { printf("BOOL\n") }
     ;
 
 evaluate_expression :
-    evaluate_expression BIT_AND evaluate_expression         {;}
+    evaluate_expression BIT_AND evaluate_expression         { printf("BIT_AND\n"); }
     |
-    evaluate_expression BIT_OR evaluate_expression          {;}
+    evaluate_expression BIT_OR evaluate_expression          { printf("BIT_OR\n"); }
     |
-    evaluate_expression BIT_XOR evaluate_expression         {;}
+    evaluate_expression BIT_XOR evaluate_expression         { printf("BIT_XOR\n"); }
     |
-    evaluate_expression PLUS evaluate_expression            {;}
+    evaluate_expression PLUS evaluate_expression            { printf("PLUS\n"); }
     |
-    evaluate_expression MINUS evaluate_expression           {;}
+    evaluate_expression MINUS evaluate_expression           { printf("MINUS\n"); }
     |
-    evaluate_expression MUL evaluate_expression             {;}
+    evaluate_expression MUL evaluate_expression             { printf("MUL\n"); }
     |
-    evaluate_expression DIV evaluate_expression             {;}
+    evaluate_expression DIV evaluate_expression             { printf("DIV\n") }
     |
-    evaluate_expression MOD evaluate_expression             {;}
+    evaluate_expression MOD evaluate_expression             { printf("MOD\n") }
     |
-    evaluate_expression INC                                 {;}
+    evaluate_expression INC                                 { printf("INC") }
     |
-    evaluate_expression DEC                                 {;}
+    evaluate_expression DEC                                 { printf("DEC\n") }
     |
     '(' evaluate_expression ')'                             {;}
     |
@@ -297,23 +299,23 @@ math_or_value :
     ;
 
 condition :
-    expression OR expression                    {;}
+    expression OR expression                    { printf("OR\n"); }
     | 
-    expression AND expression                   {;}
+    expression AND expression                   { printf("AND\n"); }
     | 
-    NOT expression                              {;}
+    NOT expression                              { printf("NOT\n"); }
     | 
-    math_or_value EQ math_or_value              {;}
+    math_or_value EQ math_or_value              { printf("EQ\n"); }
     | 
-    math_or_value NEQ math_or_value             {;}
+    math_or_value NEQ math_or_value             { printf("NEQ\n"); }
     | 
-    math_or_value LT math_or_value              {;}
+    math_or_value LT math_or_value              { printf("LT\n"); }
     | 
-    math_or_value GT math_or_value              {;}
+    math_or_value GT math_or_value              { printf("GT\n"); }
     | 
-    math_or_value LTE math_or_value             {;}
+    math_or_value LTE math_or_value             { printf("LTE\n"); }
     | 
-    math_or_value GTE math_or_value             {;}
+    math_or_value GTE math_or_value             { printf("GTE\n"); }
     | 
     '(' condition ')'                           {;}
     ;
