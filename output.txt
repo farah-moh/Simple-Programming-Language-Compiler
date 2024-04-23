@@ -1,0 +1,39 @@
+ 
+Input: int x = 0; 
+---------- 
+Output: 
+Initialization
+======================================== 
+Input: for ( int i = 0; i < 10; i+=1 ) { x += i; } 
+---------- 
+Output: 
+Assignment
+For_loop
+======================================== 
+Input: do { x+=1; } while ( x < 100 ); 
+---------- 
+Output: 
+Assignment
+Do_loop
+======================================== 
+Input: float y 
+---------- 
+Output: 
+syntax error
+======================================== 
+Input: float y; 
+---------- 
+Output: 
+Declaration
+======================================== 
+Input: if(1){call();} 
+---------- 
+Output: 
+Function_call
+If_statement
+======================================== 
+Input: switch (x) {default: break;} 
+---------- 
+Output: 
+Switch_statement
+======================================== 

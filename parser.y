@@ -194,6 +194,8 @@ switch_program :
     case_statements
     |
     case_statements default_statement
+    |
+    default_statement
     ;
 
 case_statements :
@@ -207,7 +209,7 @@ case_statement :
     ;
 
 default_statement :
-    DEFAULT literal ':' program BREAK ';'
+    DEFAULT ':' program BREAK ';'
     ;
 
 initialization :

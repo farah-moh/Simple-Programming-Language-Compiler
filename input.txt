@@ -1,0 +1,7 @@
+int x = 0;
+for ( int i = 0; i < 10; i+=1 ) { x += i; }
+do { x+=1; } while ( x < 100 );
+float y
+float y;
+if(1){call();}
+switch (x) {default: break;}
