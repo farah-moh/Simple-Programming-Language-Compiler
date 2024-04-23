@@ -2,6 +2,7 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include <string.h>
+    #include "./y.tab.h"
 %}
 
 %option yylineno
@@ -99,7 +100,7 @@ ID	[a-zA-z][a-zA-z0-9_]*
 [ \t\n]                     {;}
 
     /* parentheses */
-"[(){}\[\]]"                {return yytext[0];}
+[(){}\[\]]                {return yytext[0];}
 
     /* error */
 .                           {printf("Error: Unrecognized token %s\n", yytext); exit(1);}

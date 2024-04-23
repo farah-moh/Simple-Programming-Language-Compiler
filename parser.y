@@ -2,9 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "lex.yy.c"
 
-bool inFunction = FALSE;
+_Bool inFunction = 0;
 %}
 
 %union {
@@ -12,7 +11,7 @@ bool inFunction = FALSE;
     char *sval;
     int ival;
     float fval;
-    char *ID;
+    char *id;
 }
 
 /* Keywords */
@@ -39,6 +38,9 @@ bool inFunction = FALSE;
 /* Bitwise operators */
 %token BIT_AND BIT_OR BIT_XOR
 
+/* COMMENT tokens */
+%token COMMENT
+
 /* Associativity: https://en.cppreference.com/w/cpp/language/operator_precedence */
 %right ASSIGN ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
 %left   OR
@@ -54,8 +56,8 @@ bool inFunction = FALSE;
 %left   INC DEC
 
 /* Other tokens */
-%token <ID> ID
-%token <ival> INTEGER_CONST
+%token <id> ID
+%token <ival> INT_CONST
 %token <fval> FLOAT_CONST
 %token <sval> STRING_CONST
 %token <cval> CHAR_CONST
@@ -66,28 +68,28 @@ bool inFunction = FALSE;
 %%
 
 program :
-        program statement
-        | statement
+        program statement       {;}
+        |                       {;}
         ;
 
 statement :
-        do_loop ';'                 { printf("Do_loop\n"); }
-        | for_loop ';'              { printf("For_loop\n"); }
-        | while_loop ';'            { printf("While_loop\n"); }
+        declaration ';'             { printf("Declaration\n"); }
         | initialization ';'        { printf("Initialization\n"); }
-        | declaration ';'           { printf("Declaration\n"); }
-        | function_definition ';'   { printf("Function_definition\n"); }
-        | function_call ';'         { printf("Function_call\n"); }
-        | return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
         | assignment ';'            { printf("Assignment\n"); }
         | if_statement              { printf("If_statement\n"); }
         | switch_statement          { printf("Switch_statement\n"); }
+        | do_loop ';'               { printf("Do_loop\n"); }
+        | while_loop                { printf("While_loop\n"); }
+        | for_loop                  { printf("For_loop\n"); }
+        | function_definition       { printf("Function_definition\n"); }
+        | function_call ';'         { printf("Function_call\n"); }
+        | return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
         | ID ';'                    { printf("ID\n"); }
         | '{' program '}'           { printf("Scope\n"); }
         ;
 
 do_loop :
-        DO '{' program '}' WHILE '(' condition ')'      {;}
+        DO '{' program '}' WHILE '(' expression ')'      {;}
         ;
 
 for_loop :
@@ -95,45 +97,33 @@ for_loop :
         ;
 
 for_loop_initialization :
-    initialization  {;}
+    INT ID ASSIGN INT_CONST {;}
     |
-    for_loop_condition {;}
+    ID ASSIGN INT_CONST     {;}
+    |
+                            {;}
     ;
 
 for_loop_condition :
-    expr            {;}
-    |
-    assignment      {;}
+    expression            {;}
     |
                     {;}
     ;
 
 for_loop_increment :
-    expr            {;}
+    expression            {;}
     |
-    assignment      {;}
+    assignment            {;}
     |
                     {;}
     ;
 
 while_loop :
-    WHILE '(' condition ')' '{' program '}'     {;}
-    ;
-
-condition :
-    condition OR literal          {;}
-    | condition AND literal         {;}
-    | condition EQ literal          {;}
-    | condition NEQ literal         {;}
-    | condition LT literal          {;}
-    | condition GT literal          {;}
-    | condition LTE literal         {;}
-    | condition GTE literal         {;}
-    | literal
+    WHILE '(' expression ')' '{' program '}'     {;}
     ;
 
 function_definition :
-    function_declaration_prototype { inFunction = TRUE; } '{' program '}' { inFunction = FALSE; }
+    function_declaration_prototype { inFunction = 1; } '{' program '}' { inFunction = 0; }
     ;
 
 function_declaration_prototype : 
@@ -141,15 +131,17 @@ function_declaration_prototype :
     |
     type ID '(' function_parameters_optional ')'  {;}
     ;
+
 function_parameters_optional :
     function_parameters             {;}
     |
-                                                {;}
+                                    {;}
     ;
+
 function_parameters :
-    function_parameters ',' function_parameter {;}
+    function_parameters ',' function_parameter      {;}
     |
-    function_parameter
+    function_parameter                              {;}
     ;
 
 function_parameter:
@@ -157,36 +149,45 @@ function_parameter:
     ;
 
 return_statement :
-    RETURN expr
+    RETURN expression   {;}
+    |
+    RETURN assignment   {;}
     |
     RETURN
     ;
 
-function_call :
-    ID '(' function_arguments_optional ')'     {;}
+function_call : 
+    ID '(' function_arguments_optional ')'                      {;}
+    |
+    ID ASSIGN ID '(' function_arguments_optional ')'            {;}
+    |
+    type ID ASSIGN ID '(' function_arguments_optional ')'       {;}
     ;
+
 function_arguments_optional :
-    function_arguments        {;}
+    function_arguments              {;}
     |
                                     {;}
     ;
+
 function_arguments :
     function_arguments ',' function_argument  {;}
     |
     function_argument
     ;
+
 function_argument :
-    ID                              {;}
+    literal                              {;}
     ;
 
 if_statement :
-    IF '(' expr ')' '{' program '}'
+    IF '(' expression ')' '{' program '}'                                {;}
     |
-    IF '(' expr ')' '{' program '}' ELSE '{' program '}'
+    IF '(' expression ')' '{' program '}' ELSE '{' program '}'        {;}
     ;
 
 switch_statement :
-    SWITCH '(' expr ')' '{' switch_program '}'
+    SWITCH '(' ID ')' '{' switch_program '}'
     ;
 
 switch_program :
@@ -210,9 +211,9 @@ default_statement :
     ;
 
 initialization :
-    CONST type ID '=' expr  {;}
+    CONST type ID ASSIGN expression  {;}
     |
-    type ID '=' expr        {;}
+    type ID ASSIGN expression        {;}
     ;
 
 declaration :
@@ -222,10 +223,24 @@ declaration :
     ;
 
 assignment :
-    ID '=' expr     {;}
+    ID assign expression     {;}
     ;
 
-type:
+assign :
+    ASSIGN          {;}
+    |
+    ADD_ASSIGN      {;}
+    |
+    SUB_ASSIGN      {;}
+    |
+    MUL_ASSIGN      {;}
+    |
+    DIV_ASSIGN      {;}
+    |
+    MOD_ASSIGN      {;}
+    ;
+
+type :
     INT         {;}
     |
     FLOAT       {;}
@@ -237,14 +252,80 @@ type:
     BOOL        {;}
     ;
 
-expr :
-    literal '+' literal     {;}
-     ;
+evaluate_expression :
+    evaluate_expression BIT_AND evaluate_expression         {;}
+    |
+    evaluate_expression BIT_OR evaluate_expression          {;}
+    |
+    evaluate_expression BIT_XOR evaluate_expression         {;}
+    |
+    evaluate_expression PLUS evaluate_expression            {;}
+    |
+    evaluate_expression MINUS evaluate_expression           {;}
+    |
+    evaluate_expression MUL evaluate_expression             {;}
+    |
+    evaluate_expression DIV evaluate_expression             {;}
+    |
+    evaluate_expression MOD evaluate_expression             {;}
+    |
+    evaluate_expression INC                                 {;}
+    |
+    evaluate_expression DEC                                 {;}
+    |
+    '(' evaluate_expression ')'                             {;}
+    |
+    FLOAT_CONST                                             {;}
+    |
+    INT_CONST                                               {;}                        
+    |
+    CHAR_CONST                                              {;}
+    |
+    ID                                                      {;}
+    |
+    TRUE                                                    {;}
+    |
+    FALSE                                                   {;}
+    ;
+
+math_or_value :
+    evaluate_expression                 {;}
+    |
+    STRING_CONST                        {;}
+    ;
+
+condition :
+    expression OR expression                    {;}
+    | 
+    expression AND expression                   {;}
+    | 
+    NOT expression                              {;}
+    | 
+    math_or_value EQ math_or_value              {;}
+    | 
+    math_or_value NEQ math_or_value             {;}
+    | 
+    math_or_value LT math_or_value              {;}
+    | 
+    math_or_value GT math_or_value              {;}
+    | 
+    math_or_value LTE math_or_value             {;}
+    | 
+    math_or_value GTE math_or_value             {;}
+    | 
+    '(' condition ')'                           {;}
+    ;
+
+expression :
+    math_or_value           {;}
+    |
+    condition               {;}
+    ;
 
 literal :
     ID                          {;}
     |
-    INTEGER_CONST               {;}
+    INT_CONST                   {;}
     |
     FLOAT_CONST                 {;}
     |
