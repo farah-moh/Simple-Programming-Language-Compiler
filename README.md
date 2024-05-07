@@ -12,7 +12,9 @@
 
 `bison --yacc parser.y -d`
 
-`gcc y.tab.c lex.yy.c`
+`g++ -c symbolTable.cpp`
+
+`gcc -c y.tab.c lex.yy.c`
 
 `.\a.exe ".\program.faam"`
 
