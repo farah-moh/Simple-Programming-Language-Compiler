@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symbolTable.h"
 
 void yyerror(char* s);
 int yylex();
@@ -78,7 +77,7 @@ program :
         ;
 
 statement :
-        declaration ';'             { printf("Declaration\n"); }
+        declaration ';'           { printf("Declaration\n"); }
         | 
         initialization ';'        { printf("Initialization\n"); }
         | 

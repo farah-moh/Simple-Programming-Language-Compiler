@@ -8,13 +8,11 @@
 | Mohamed Hassan Mohamed  | 1190118 | Sunday    | 4:00 - 7:00  |
 
 ### How to run?
-`flex lexer.l`
 
-`bison --yacc parser.y -d`
+run the following command in the terminal on windows:
 
-`g++ -c symbolTable.cpp`
+```
+./run.bat
+```
 
-`gcc -c y.tab.c lex.yy.c`
-
-`.\a.exe ".\program.faam"`
-
+For linux you need to run the same commands in the run.bat file commands manually.

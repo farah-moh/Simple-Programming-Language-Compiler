@@ -1,12 +1,12 @@
 PLUS
 Function_definition
-Initialization     
-Function_call      
-Declaration        
+Initialization
+Function_call
+Declaration
 ASSIGN
 Assignment
 PLUS
-Initialization     
+Initialization
 Initialization
 If statement start
 GT
