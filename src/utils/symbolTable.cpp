@@ -1,49 +1,45 @@
-#include "symbolTable.h"
-#include <iostream>
-#include <string>
+#include "symbolTable.hpp"
 #include <vector>
-#include <map>
 
-using namespace std;
+vector<string> symbolTypeName = {"INT", "FLOAT", "CHAR", "STRING", "BOOL", "CONST", "VOID", "UNKNOWN"};
 
-struct symbol {
-    string name;
-    typeAndValue value;
-    bool isConst;
-    bool isInitializated;
-};
-
-struct symbolTable {
-    map<string, symbol> symbols;
-    symbolTable *parent;
-};
-
-vector<vector<symbolTable*>> symbolTableAdj;
-
-symbolTable* current;
-int numScopes = 0;
+symbolTable::symbolTable() {
+    this->scope = 0;
+}
 
 // direction = true means enter a new scope downward, false means leave the current scope and go to the parent scope
-void leaveCurrentScope(bool direction) {
+void symbolTable::changeScope(bool direction) {
+    cout<< "Changing scope" << endl;
+    cout<< "Current scope: " << current->scope << endl;
     if (direction == 1) {
+        cout<< "Entering new scope" << endl;
         symbolTable* newTable = new symbolTable();
+        cout<<"1"<<endl;
         newTable->parent = current;
+        symbolTableAdj[current->scope].push_back(newTable);
         current = newTable;
-        symbolTableAdj[numScopes].push_back(newTable);
+        cout<< "2"<<endl;
         symbolTableAdj.push_back(vector<symbolTable*>());
+        cout<< "3"<<endl;
         numScopes++;
+        newTable->scope = numScopes;
     } else {
         current = current->parent;
     }
+    cout<< "New scope: " << current->scope << endl;
 }
 
 /*
 type: declaration type of the symbol
 value: value of the symbol to be updated
 */
-
-symbol* addSymbol(char* name, symbolType type, typeAndValue value, bool isConst, bool isInitialization) {
-    std::string str(name);
+symbol* symbolTable::addOrUpdateSymbol(string name, symbolType type, constNode* value, bool isConst, bool isInitialization) {
+    cout<< "Adding or updating symbol" << endl;
+    cout<< "Symbol name: " << name << endl;
+    cout<< "Symbol type: " << symbolTypeName[type] << endl;
+    cout<< "Symbol value: " << value->type << endl;
+    cout<< "Symbol isConst: " << isConst << endl;
+    cout<< "Symbol isInitialization : " << isInitialization << endl;
     symbolTable *root = current;
     bool firstIteration = true;
     while (root != NULL) {
@@ -52,7 +48,8 @@ symbol* addSymbol(char* name, symbolType type, typeAndValue value, bool isConst,
             // if it is a declaration
             if(type != UNKNOWN) {
                 if(firstIteration) {
-                    cout << "Error: Symbol " << name << " already exists in this scope." << endl;
+                    string error = "Error: Symbol " + name + " already exists in this scope.";
+                    yyerror(error.c_str());
                     return NULL;
                 } 
                 else {
@@ -68,11 +65,13 @@ symbol* addSymbol(char* name, symbolType type, typeAndValue value, bool isConst,
             // if it is a reference
             else {
                 if(foundSymbol->second.isConst) {
-                    cout << "Error: Symbol " << name << " is a constant, you can't update it." << endl;
+                    string error = "Error: Symbol " + name + " is a constant, you can't update it.";
+                    yyerror(error.c_str());
                     return NULL;
                 }
-                else if(foundSymbol->second.value.type != value.type) {
-                    cout << "Error: Symbol " << name << " is of type " << foundSymbol->second.value.type << ", you can't update it with a value of type " << value.type << endl;
+                else if(foundSymbol->second.value->type != value->type) {
+                    string error = "Error: Symbol " + name + " is of type " + symbolTypeName[foundSymbol->second.value->type] + ", you can't update it with a value of type " + symbolTypeName[value->type];
+                    yyerror(error.c_str());
                     return NULL;
                 }
                 else {
@@ -83,21 +82,24 @@ symbol* addSymbol(char* name, symbolType type, typeAndValue value, bool isConst,
         }
 
         root = root->parent;
+        firstIteration = false;
     } 
 
     // if the symbol is not found in any of the parent scopes, new symbol
     if(type == UNKNOWN) {
-        cout << "Error: Symbol " << name << " must be declared first." << endl;
+        string error = "Error: Symbol " + name + " must be declared first.";
+        yyerror(error.c_str());
         return NULL;
     }
-    else if (type != value.type && isInitialization) {
-        cout << "Error: Symbol " << name << " is of type " << type << ", you can't assign a value of type " << value.type << endl;
+    else if (type != value->type && isInitialization) {
+        string error = "Error: Symbol " + name + " is of type " + symbolTypeName[type] + ", you can't assign a value of type " + symbolTypeName[value->type];
+        yyerror(error.c_str());
         return NULL;
     }
     else {
         symbol newSymbol;
         newSymbol.name = name;
-        value.type = type;
+        value->type = type;
         newSymbol.value = value;
         newSymbol.isConst = isConst;
         newSymbol.isInitializated = isInitialization;
@@ -107,7 +109,7 @@ symbol* addSymbol(char* name, symbolType type, typeAndValue value, bool isConst,
     
 }
 
-symbol* findSymbol(char* name) {
+symbol* symbolTable::findSymbol(string name) {
     symbolTable *root = current;
     while (root != NULL) {
         auto foundSymbol = root->symbols.find(name);
@@ -127,15 +129,32 @@ symbol* findSymbol(char* name) {
     return NULL;
 }
 
-void printSymbolTable() {
-    cout << "Symbol Table:" << endl;
-    for(int i = 0; i < numScopes; i++) {
-        cout << "Scope " << i << ":" << endl;
-        for(auto it = symbolTableAdj[i].begin(); it != symbolTableAdj[i].end(); it++) {
-            for(auto it2 = (*it)->symbols.begin(); it2 != (*it)->symbols.end(); it2++) {
-                cout << it2->second.name << " ";
+void symbolTable::printSymbolTable(symbolTable* root) {
+    cout << "\n---------------\n\nScope " << root->scope << ":" << endl;
+    for(auto it2 = root->symbols.begin(); it2 != root->symbols.end(); it2++) {
+            cout <<"Symbol: " <<it2->second.name << " ";
+    }
+    cout<<endl<<endl;
+    for(auto it = symbolTableAdj[root->scope].begin(); it != symbolTableAdj[root->scope].end(); it++) {
+        printSymbolTable(*it);
+    }
+}
+
+symbolTable::~symbolTable() {
+    
+}
+
+void symbolTable::cleanup() {
+    for(int i = 0; i <= numScopes; i++) {
+        for(auto i : symbolTableAdj[i]) {
+            if(i != NULL) {
+                for (auto it = i->symbols.begin(); it != i->symbols.end(); it++) {
+                    if(it->second.value != NULL) {
+                        delete it->second.value;
+                    }
+                }
+                delete i;
             }
-            cout << endl;
         }
     }
 }

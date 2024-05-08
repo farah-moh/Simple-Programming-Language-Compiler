@@ -70,3 +70,20 @@ false
 comments: [done]
 
 // 
+
+Nodes:
+
+Two Types:
+
+1- Const 	nodes: contain const type & const value
+2- NonCosnt nodes: contain all other types: declarations - assignments - operations
+
+Generic Node:
+
+isConst [whether or not it is a const node]
+Either:
+1- Const Node
+2- Non Const Node:
+	- name
+	- number of operands
+	- operands

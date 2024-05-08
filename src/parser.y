@@ -1,12 +1,17 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
+#include "utils/symbolTable.hpp"
 
-void yyerror(char* s);
+symbolTable symbTable = symbolTable();
+int symbolTable::numScopes = 0;
+vector<vector<symbolTable*>> symbolTable::symbolTableAdj = vector<vector<symbolTable*>>(1,vector<symbolTable*>());
+symbolTable* symbolTable::current = &symbTable;
+
 int yylex();
 
-_Bool inFunction = 0;
+int inFunction = 0;
 %}
 
 %union {
@@ -15,6 +20,8 @@ _Bool inFunction = 0;
     int ival;
     float fval;
     char *id;
+    constNode* constNodeType;
+    symbolType symbolTypeType;
 }
 
 /* Keywords */
@@ -66,7 +73,14 @@ _Bool inFunction = 0;
 %token <sval> STRING_CONST
 %token <cval> CHAR_CONST
 
-%type <sval> type function_declaration_prototype
+%type <sval> function_declaration_prototype
+%type <constNodeType> evaluate_expression 
+%type <constNodeType> math_or_value  
+%type <constNodeType> expression 
+%type <constNodeType> condition 
+%type <constNodeType> unary_expression
+%type <constNodeType> literal
+%type <symbolTypeType> type
 
 /* Grammar */
 %%
@@ -100,24 +114,26 @@ statement :
         function_call ';'         { printf("Function_call\n"); }
         | 
         return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
-        | 
-        ID ';'                    { printf("ID\n"); }
-        | 
+        |
         { printf("Scope start\n"); }          '{' program '}'           { printf("Scope end\n"); }
         ;
 
 do_loop :
-        DO '{' program '}' WHILE '(' expression ')'      {;}
+        DO {symbTable.changeScope(1);} '{' program '}' WHILE {symbTable.changeScope(0);} '(' expression ')'      {;}
         ;
 
 for_loop :
-        FOR '(' for_loop_initialization ';' for_loop_condition ';' for_loop_increment ')' '{' program '}' {;}
+        FOR {symbTable.changeScope(1);} '(' for_loop_initialization ';' for_loop_condition ';' for_loop_increment ')' '{' program '}' {symbTable.changeScope(0);};
         ;
 
 for_loop_initialization :
-    INT ID ASSIGN INT_CONST {;}
+    INT ID ASSIGN INT_CONST {
+                                symbTable.addOrUpdateSymbol(string($2),symbolType::INTtype,new constNode(symbolType::INTtype,to_string($4)),0,1);
+                            }
     |
-    ID ASSIGN INT_CONST     {;}
+    ID ASSIGN INT_CONST     {
+                                symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,new constNode(symbolType::INTtype,to_string($3)),0,0);
+                            }
     |
                             {;}
     ;
@@ -137,11 +153,11 @@ for_loop_increment :
     ;
 
 while_loop :
-    WHILE '(' expression ')' '{' program '}'     {;}
+    WHILE '(' expression ')' {symbTable.changeScope(1);} '{' program '}'     {symbTable.changeScope(0);}
     ;
 
 function_definition :
-    function_declaration_prototype { inFunction = 1; } '{' program '}' { inFunction = 0; }
+    function_declaration_prototype { inFunction = 1;} '{' program '}' { inFunction = 0;}
     ;
 
 function_declaration_prototype : 
@@ -199,9 +215,13 @@ function_argument :
     ;
 
 if_statement :
-    IF '(' expression ')' '{' program '}'                                {;}
+    one_level_if_statement
     |
-    IF '(' expression ')' '{' program '}' ELSE '{' program '}'           {;}
+    one_level_if_statement ELSE '{' program '}' {symbTable.changeScope(0);}
+    ;
+
+one_level_if_statement :
+    IF '(' expression ')' {symbTable.changeScope(1);} '{' program '}'    {symbTable.changeScope(0);}
     ;
 
 switch_statement :
@@ -223,27 +243,27 @@ case_statements :
     ;
 
 case_statement :
-    CASE literal ':' program BREAK ';'
+    CASE literal ':' {symbTable.changeScope(1);} program {symbTable.changeScope(0);} BREAK ';'
     ;
 
 default_statement :
-    DEFAULT ':' program BREAK ';'
+    DEFAULT ':' {symbTable.changeScope(1);} program {symbTable.changeScope(0);} BREAK ';'
     ;
 
 initialization :
-    CONST type ID ASSIGN expression  {;}
+    CONST type ID ASSIGN expression  {symbTable.addOrUpdateSymbol(string($3),$2,$5,1,1);}
     |
-    type ID ASSIGN expression        {;}
+    type ID ASSIGN expression        {symbTable.addOrUpdateSymbol(string($2),$1,$4,0,1);}
     ;
 
 declaration :
-    CONST type ID   {;}
+    CONST type ID   {symbTable.addOrUpdateSymbol(string($3),$2,new constNode(),1,0);}
     |
-    type ID         {;}
+    type ID         {symbTable.addOrUpdateSymbol(string($2),$1,new constNode(),0,0);}
     ;
 
 assignment :
-    ID assign expression     %prec ASSIGN{;}
+    ID assign expression     %prec ASSIGN{symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,$3,0,0);}
     ;
 
 assign :
@@ -261,15 +281,15 @@ assign :
     ;
 
 type :
-    INT         { ; }
+    INT         {$$ = symbolType::INTtype;}
     |
-    FLOAT       { ; }
+    FLOAT       {$$ = symbolType::FLOATtype;}
     |
-    CHAR        { ; }
+    CHAR        {$$ = symbolType::CHARtype;}
     |
-    STRING      { ; }
+    STRING      {$$ = symbolType::STRINGtype;}
     |
-    BOOL        { ; }
+    BOOL        {$$ = symbolType::BOOLtype;}
     ;
 
 evaluate_expression :
@@ -295,23 +315,23 @@ evaluate_expression :
     |
     '(' evaluate_expression ')'                             {;}
     |
-    FLOAT_CONST                                             {;}
+    FLOAT_CONST                                             {$$ = new constNode(symbolType::FLOATtype,to_string($1));}
     |
-    INT_CONST                                               {;}                        
+    INT_CONST                                               {$$ = new constNode(symbolType::INTtype,to_string($1));}                        
     |
-    CHAR_CONST                                              {;}
+    CHAR_CONST                                              {$$ = new constNode(symbolType::INTtype, to_string((int)$1));}
     |
     ID                                                      {;}
     |
-    TRUE                                                    {;}
+    TRUE                                                    {$$ = new constNode(symbolType::BOOLtype,"1");}
     |
-    FALSE                                                   {;}
+    FALSE                                                   {$$ = new constNode(symbolType::BOOLtype,"0");}
     ;
 
 math_or_value :
     evaluate_expression                 {;}
     |
-    STRING_CONST                        {;}
+    STRING_CONST                        {$$ = new constNode(symbolType::STRINGtype,$1);}
     ;
 
 condition :
@@ -352,28 +372,30 @@ expression :
 literal :
     ID                          {;}
     |
-    INT_CONST                   {;}
+    INT_CONST                   {$$ = new constNode(symbolType::INTtype,to_string($1));}
     |
-    FLOAT_CONST                 {;}
+    FLOAT_CONST                 {$$ = new constNode(symbolType::FLOATtype,to_string($1));}
     |
-    CHAR_CONST                  {;}
+    CHAR_CONST                  {$$ = new constNode(symbolType::INTtype,to_string($1));}
     |
-    STRING_CONST                {;}
+    STRING_CONST                {$$ = new constNode(symbolType::STRINGtype,$1);}
     |
-    TRUE                        {;}
+    TRUE                        {$$ = new constNode(symbolType::BOOLtype,"1");}
     |
-    FALSE                       {;}
+    FALSE                       {$$ = new constNode(symbolType::BOOLtype,"0");}
     ;
 %%
 
 /* Error handling */
-void yyerror(char *msg){
+void yyerror(const char *msg){
   fprintf(stderr, "%s\n", msg);
   exit(1);
 }
 
 
 int main(int argc, char *argv[]){
+
+    printf("Starting...\n");
 
     extern FILE* yyin;
     char* filename = argv[1];
@@ -385,6 +407,9 @@ int main(int argc, char *argv[]){
     yyin = file;
 
     yyparse();
+    symbTable.printSymbolTable(symbolTable::current);
+    symbolTable::cleanup();
+    cout<<"Cleanup done"<<endl;
 
     return 0;
 }
