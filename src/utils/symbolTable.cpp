@@ -1,7 +1,6 @@
 #include "symbolTable.hpp"
 #include <vector>
 
-vector<string> symbolTypeName = {"INT", "FLOAT", "CHAR", "STRING", "BOOL", "CONST", "VOID", "UNKNOWN"};
 
 symbolTable::symbolTable() {
     this->scope = 0;

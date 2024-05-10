@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 #include <string>
 #include <vector>
@@ -7,7 +6,11 @@
 
 using namespace std;
 
-enum symbolType {INTtype, FLOATtype, CHARtype, STRINGtype, BOOLtype, CONSTtype, VOIDtype, UNKNOWN};
+#ifndef SYMBOLTABLE_HPP
+#define SYMBOLTABLE_HPP
+
+enum symbolType {FLOATtype, INTtype, BOOLtype, CHARtype, STRINGtype, CONSTtype, VOIDtype, UNKNOWN};
+vector<string> symbolTypeName = {"FLOAT", "INT", "BOOL", "CHAR", "STRING", "CONST", "VOID", "UNKNOWN"};
 
 class constNode {
 public:
@@ -103,3 +106,4 @@ public:
     ~symbolTable();
 };
 
+#endif
