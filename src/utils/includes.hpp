@@ -37,7 +37,7 @@ enum operation {
                 Bit_xor,    
             };
 
-string operationToString[] = {
+const string operationToString[] = {
     "plus",
     "minus",
     "mul",

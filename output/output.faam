@@ -1,0 +1,132 @@
+Starting...
+Initialization
+Error: Symbol sum not found.
+Symbol num found in scope 0
+Function_call
+Declaration
+ASSIGN
+Found symbol in scope 0
+Assignment
+Symbol x found in scope 0
+------------------ Unary op ------------------
+1
+Writing to file
+inc x  t0
+Unary Expression
+Symbol x found in scope 0
+INT INT
+Writing to file
+plus x 5 t1
+Initialization
+Initialization
+If statement start
+Symbol x found in scope 0
+Symbol y found in scope 0
+GT
+Changing scope
+Current scope: 0
+Entering new scope
+New scope: 1
+ASSIGN
+Found symbol in scope 1
+Assignment
+Changing scope
+Current scope: 1
+New scope: 0
+Changing scope
+Current scope: 0
+Entering new scope
+New scope: 2
+ASSIGN
+Found symbol in scope 2
+Assignment
+Changing scope
+Current scope: 2
+New scope: 0
+If statement end
+Initialization
+Switch case start
+Changing scope
+Current scope: 0
+Entering new scope
+New scope: 3
+Symbol x found in scope 3
+------------------ Unary op ------------------
+1
+Writing to file
+inc x  t2
+Unary Expression
+Changing scope
+Current scope: 3
+New scope: 0
+Changing scope
+Current scope: 0
+Entering new scope
+New scope: 4
+Symbol y found in scope 4
+------------------ Unary op ------------------
+1
+Writing to file
+inc y  t3
+Unary Expression
+Changing scope
+Current scope: 4
+New scope: 0
+Changing scope
+Current scope: 0
+Entering new scope
+New scope: 5
+ADD_ASSIGN
+Found symbol in scope 5
+Assignment
+Changing scope
+Current scope: 5
+New scope: 0
+Switch case end
+Initialization
+Do while loop start
+Changing scope
+Current scope: 0
+Entering new scope
+New scope: 6
+Symbol counter found in scope 6
+------------------ Unary op ------------------
+1
+Writing to file
+inc counter  t4
+Unary Expression
+Changing scope
+Current scope: 6
+New scope: 0
+Symbol counter found in scope 6
+LT
+Do while loop end
+Initialization
+While loop start
+Symbol j found in scope 6
+LT
+Changing scope
+Current scope: 0
+Entering new scope
+New scope: 7
+Symbol j found in scope 7
+------------------ Unary op ------------------
+1
+Writing to file
+inc j  t5
+Unary Expression
+Changing scope
+Current scope: 7
+New scope: 0
+While loop end
+Error: Symbol sum not found.
+Function_call
+For loop start
+Changing scope
+Current scope: 0
+Entering new scope
+New scope: 8
+Error: Symbol k is not initialized.
+LT
+Error: Symbol k is not initialized.
+------------------ Unary op ------------------

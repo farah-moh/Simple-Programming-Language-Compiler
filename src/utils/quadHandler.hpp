@@ -15,7 +15,7 @@ public:
 
     symbol* math_op(operation op, symbol* arg1, symbol* arg2);
     symbol* unary_op(operation op, symbol* arg1);
-    symbol* assign_op(operation op, symbol* arg1, symbol* arg2);
+    void assign_op(operation op, symbol* arg1, symbol* arg2);
     symbol* logic_op(operation op, symbol* arg1, symbol* arg2);
     symbol* bit_op(operation op, symbol* arg1, symbol* arg2);
     symbol* rel_op(operation op, symbol* arg1, symbol* arg2);

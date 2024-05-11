@@ -1,10 +1,12 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include <string>
+#include <cstring>
 #include "utils/symbolTable.hpp"
+#include "utils/quadHandler.hpp"
 
 symbolTable symbTable = symbolTable();
+QuadHandler quadHandle = QuadHandler("quad.faam");
 int symbolTable::numScopes = 0;
 vector<vector<symbolTable*>> symbolTable::symbolTableAdj = vector<vector<symbolTable*>>(1,vector<symbolTable*>());
 symbolTable* symbolTable::current = &symbTable;
@@ -15,12 +17,8 @@ int inFunction = 0;
 %}
 
 %union {
-    char cval;
     char *sval;
-    int ival;
-    float fval;
-    char *id;
-    constNode* constNodeType;
+    symbol* symboll;
     symbolType symbolTypeType;
 }
 
@@ -67,19 +65,19 @@ int inFunction = 0;
 %left FUNC
 
 /* Other tokens */
-%token <id> ID
-%token <ival> INT_CONST
-%token <fval> FLOAT_CONST
+%token <sval> ID
+%token <sval> INT_CONST
+%token <sval> FLOAT_CONST
 %token <sval> STRING_CONST
-%token <cval> CHAR_CONST
+%token <sval> CHAR_CONST
 
 %type <sval> function_declaration_prototype
-%type <constNodeType> evaluate_expression 
-%type <constNodeType> math_or_value  
-%type <constNodeType> expression 
-%type <constNodeType> condition 
-%type <constNodeType> unary_expression
-%type <constNodeType> literal
+%type <symboll> evaluate_expression 
+%type <symboll> math_or_value  
+%type <symboll> expression 
+%type <symboll> condition 
+%type <symboll> unary_expression
+%type <symboll> literal
 %type <symbolTypeType> type
 
 /* Grammar */
@@ -115,7 +113,7 @@ statement :
         | 
         return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
         |
-        { printf("Scope start\n"); }          '{' program '}'           { printf("Scope end\n"); }
+        { printf("Scope start\n"); }          '{' {symbTable.changeScope(1);} program '}' {symbTable.changeScope(0);}    { printf("Scope end\n"); }
         ;
 
 do_loop :
@@ -128,11 +126,11 @@ for_loop :
 
 for_loop_initialization :
     INT ID ASSIGN INT_CONST {
-                                symbTable.addOrUpdateSymbol(string($2),symbolType::INTtype,new constNode(symbolType::INTtype,to_string($4)),0,1);
+                                symbTable.addOrUpdateSymbol(string($2),symbolType::INTtype,new symbol(string($4), symbolType::INTtype, 1,1),0 ,0);
                             }
     |
     ID ASSIGN INT_CONST     {
-                                symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,new constNode(symbolType::INTtype,to_string($3)),0,0);
+                                symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,new symbol(string($3), symbolType::INTtype, 1,1),0,0);
                             }
     |
                             {;}
@@ -217,7 +215,7 @@ function_argument :
 if_statement :
     one_level_if_statement
     |
-    one_level_if_statement ELSE '{' program '}' {symbTable.changeScope(0);}
+    one_level_if_statement ELSE {symbTable.changeScope(1);} '{' program '}' {symbTable.changeScope(0);}
     ;
 
 one_level_if_statement :
@@ -253,17 +251,20 @@ default_statement :
 initialization :
     CONST type ID ASSIGN expression  {symbTable.addOrUpdateSymbol(string($3),$2,$5,1,1);}
     |
-    type ID ASSIGN expression        {symbTable.addOrUpdateSymbol(string($2),$1,$4,0,1);}
+    type ID ASSIGN expression        {
+        symbTable.addOrUpdateSymbol(string($2),$1,$4,0,1);}
     ;
 
 declaration :
-    CONST type ID   {symbTable.addOrUpdateSymbol(string($3),$2,new constNode(),1,0);}
+    CONST type ID   {symbTable.addOrUpdateSymbol(string($3),$2,NULL,1,0);}
     |
-    type ID         {symbTable.addOrUpdateSymbol(string($2),$1,new constNode(),0,0);}
+    type ID         {symbTable.addOrUpdateSymbol(string($2),$1,NULL,0,0);}
     ;
 
 assignment :
-    ID assign expression     %prec ASSIGN{symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,$3,0,0);}
+    ID assign expression     %prec ASSIGN{
+        symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,$3,0,1);
+        }
     ;
 
 assign :
@@ -299,39 +300,39 @@ evaluate_expression :
     |
     evaluate_expression BIT_XOR evaluate_expression         { printf("BIT_XOR\n"); }
     |
-    evaluate_expression PLUS evaluate_expression            { printf("PLUS\n"); }
+    evaluate_expression PLUS evaluate_expression            {$$ = quadHandle.math_op(operation::Plus, $1, $3); }
     |
-    evaluate_expression MINUS evaluate_expression           { printf("MINUS\n"); }
+    evaluate_expression MINUS evaluate_expression           {$$ = quadHandle.math_op(operation::Minus, $1, $3);}
     |
-    evaluate_expression MUL evaluate_expression             { printf("MUL\n"); }
+    evaluate_expression MUL evaluate_expression             {$$ = quadHandle.math_op(operation::Mul, $1, $3);}
     |
-    evaluate_expression DIV evaluate_expression             { printf("DIV\n"); }
+    evaluate_expression DIV evaluate_expression             {$$ = quadHandle.math_op(operation::Div, $1, $3);}
     |
-    evaluate_expression MOD evaluate_expression             { printf("MOD\n"); }
+    evaluate_expression MOD evaluate_expression             {$$ = quadHandle.math_op(operation::Mod, $1, $3);}
     |
-    evaluate_expression INC                                 { printf("INC\n"); }
+    evaluate_expression INC                                 {$$ = quadHandle.unary_op(operation::Inc, $1);}
     |
-    evaluate_expression DEC                                 { printf("DEC\n"); }
+    evaluate_expression DEC                                 {$$ = quadHandle.unary_op(operation::Inc, $1);}
     |
     '(' evaluate_expression ')'                             {;}
     |
-    FLOAT_CONST                                             {$$ = new constNode(symbolType::FLOATtype,to_string($1));}
+    FLOAT_CONST                                             {$$ = new symbol($1, symbolType::FLOATtype,1,1);}
     |
-    INT_CONST                                               {$$ = new constNode(symbolType::INTtype,to_string($1));}                        
+    INT_CONST                                               {$$ = new symbol($1, symbolType::INTtype, 1,1);}                        
     |
-    CHAR_CONST                                              {$$ = new constNode(symbolType::INTtype, to_string((int)$1));}
+    CHAR_CONST                                              {$$ = new symbol($1, symbolType::INTtype, 1,1);}
     |
-    ID                                                      {;}
+    ID                                                      {$$ = symbTable.findSymbol(string($1));}
     |
-    TRUE                                                    {$$ = new constNode(symbolType::BOOLtype,"1");}
+    TRUE                                                    {$$ = new symbol("true", symbolType::BOOLtype, 1,1);}
     |
-    FALSE                                                   {$$ = new constNode(symbolType::BOOLtype,"0");}
+    FALSE                                                   {$$ = new symbol("false", symbolType::BOOLtype, 1,1);}
     ;
 
 math_or_value :
     evaluate_expression                 {;}
     |
-    STRING_CONST                        {$$ = new constNode(symbolType::STRINGtype,$1);}
+    STRING_CONST                        {$$ = new symbol($1, symbolType::STRINGtype, 1,1);}
     ;
 
 condition :
@@ -357,9 +358,9 @@ condition :
     ;
 
 unary_expression:
-    ID INC      {;}
+    ID INC      {$$ = quadHandle.unary_op(operation::Inc, symbTable.findSymbol(string($1)));}
     |
-    ID DEC      {;}
+    ID DEC      {$$ = quadHandle.unary_op(operation::Inc, symbTable.findSymbol(string($1)));}
     ;
 
 expression :
@@ -370,19 +371,19 @@ expression :
 
 
 literal :
-    ID                          {;}
+    ID                          {$$ = symbTable.findSymbol(string($1));}
     |
-    INT_CONST                   {$$ = new constNode(symbolType::INTtype,to_string($1));}
+    INT_CONST                   {$$ = new symbol($1, symbolType::INTtype, 1,1);}
     |
-    FLOAT_CONST                 {$$ = new constNode(symbolType::FLOATtype,to_string($1));}
+    FLOAT_CONST                 {$$ = new symbol($1, symbolType::FLOATtype, 1,1);}
     |
-    CHAR_CONST                  {$$ = new constNode(symbolType::INTtype,to_string($1));}
+    CHAR_CONST                  {$$ = new symbol($1, symbolType::INTtype, 1,1);}
     |
-    STRING_CONST                {$$ = new constNode(symbolType::STRINGtype,$1);}
+    STRING_CONST                {$$ = new symbol($1, symbolType::STRINGtype, 1,1);}
     |
-    TRUE                        {$$ = new constNode(symbolType::BOOLtype,"1");}
+    TRUE                        {$$ = new symbol("true", symbolType::BOOLtype,1,1);}
     |
-    FALSE                       {$$ = new constNode(symbolType::BOOLtype,"0");}
+    FALSE                       {$$ = new symbol("false", symbolType::BOOLtype,1,1);}
     ;
 %%
 

@@ -85,14 +85,14 @@ ID	[a-zA-z][a-zA-z0-9_]*
 {ID}        {yylval.sval = strdup(yytext); return ID;}
 
     /* constants */
-(0|[1-9][0-9]*)             {yylval.ival = atoi(yytext); return INT_CONST;}
-(0|[1-9][0-9]*)\.[0-9]+     {yylval.fval = atof(yytext); return FLOAT_CONST;}
+(0|[1-9][0-9]*)             {yylval.sval = strdup(yytext); return INT_CONST;}
+(0|[1-9][0-9]*)\.[0-9]+     {yylval.sval = strdup(yytext); return FLOAT_CONST;}
 
     /* strings */
 (\"[^"]*\")                 {yylval.sval = strdup(yytext); return STRING_CONST;}
 
     /* characters */
-(\'[^\']\')                 {yylval.cval = yytext[1]; return CHAR_CONST;}
+(\'[^\']\')                 {yylval.sval = strdup(yytext); return CHAR_CONST;}
 
     /* comments */
 ("//".*)                    {return COMMENT;}

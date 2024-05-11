@@ -10,10 +10,13 @@ using namespace std;
 #define SYMBOLTABLE_HPP
 
 enum symbolType {FLOATtype, INTtype, BOOLtype, CHARtype, STRINGtype, CONSTtype, VOIDtype, UNKNOWN};
-vector<string> symbolTypeName = {"FLOAT", "INT", "BOOL", "CHAR", "STRING", "CONST", "VOID", "UNKNOWN"};
+const vector<string> symbolTypeName = {"FLOAT", "INT", "BOOL", "CHAR", "STRING", "CONST", "VOID", "UNKNOWN"};
 
 class constNode {
 public:
+    constNode(symbolType type) {
+        this->type = type;
+    }
     constNode(symbolType type, string value) {
         this->type = type;
         switch (type) {
@@ -49,7 +52,7 @@ public:
 class symbol {
 public:
     string name;
-    constNode* value;
+    symbolType type;
     bool isConst;
     bool isInitializated;
 
@@ -59,9 +62,9 @@ public:
         isInitializated = false;
     }
 
-    symbol(string name, constNode* value, bool isConst, bool isInitializated) {
+    symbol(string name, symbolType type, bool isConst, bool isInitializated) {
         this->name = name;
-        this->value = value;
+        this->type = type;
         this->isConst = isConst;
         this->isInitializated = isInitializated;
     }
@@ -87,7 +90,7 @@ public:
     static vector<vector<symbolTable*>> symbolTableAdj;
     static int numScopes;
     int scope;
-    map<string, symbol> symbols;
+    map<string, symbol*> symbols;
     symbolTable *parent;
 
     symbolTable();
@@ -95,7 +98,7 @@ public:
     // direction = true means enter a new scope downward, false means leave the current scope and go to the parent scope
     void changeScope(bool direction);
 
-    struct symbol* addOrUpdateSymbol(string name, symbolType type, constNode* value, bool isConst, bool isInitialization);
+    struct symbol* addOrUpdateSymbol(string name, symbolType type, symbol* value, bool isConst, bool isInitialization);
 
     struct symbol* findSymbol(string name);
 
