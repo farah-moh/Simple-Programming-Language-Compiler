@@ -73,6 +73,8 @@ int inFunction = 0;
 %token <sval> CHAR_CONST
 
 %type <sval> function_declaration_prototype
+%type <sval> one_level_if_statement
+%type <symboll> for_loop_condition
 %type <symboll> evaluate_expression 
 %type <symboll> math_or_value  
 %type <symboll> expression 
@@ -119,41 +121,48 @@ statement :
         ;
 
 do_loop :
-        DO {symbTable.changeScope(1);} '{' program '}' WHILE {symbTable.changeScope(0);} '(' expression ')'      {;}
+        DO {symbTable.changeScope(1); string label = quadHandle.generateLabel(); quadHandle.writeToFile(label+":"); $<sval>$ = strdup(label.data());} 
+           '{' program '}' 
+           WHILE 
+           {symbTable.changeScope(0);} 
+           '(' expression ')'      {quadHandle.jump_cond_op($9, $<sval>2, true);}
         ;
 
 for_loop :
-        FOR {symbTable.changeScope(1);} '(' for_loop_initialization ';' for_loop_condition ';' for_loop_increment ')' '{' program '}' {symbTable.changeScope(0);};
+        FOR {symbTable.changeScope(1); string label = quadHandle.generateLabel(); $<sval>$ = strdup(label.data());} 
+            '(' for_loop_initialization {quadHandle.writeToFile(string($<sval>2)+":");} ';' 
+            for_loop_condition {string label = quadHandle.generateLabel(); $<sval>$ = strdup(label.data()); quadHandle.jump_cond_op($7, label, false);} ';' 
+            for_loop_increment ')' 
+            '{' program '}' 
+            {quadHandle.jump_uncond_op($<sval>2); symbTable.changeScope(0); quadHandle.writeToFile($<sval>8);};
         ;
 
 for_loop_initialization :
     INT ID ASSIGN INT_CONST {
-                                symbTable.addOrUpdateSymbol(string($2),symbolType::INTtype,new symbol(string($4), symbolType::INTtype, 1,1),0 ,0);
+                                symbol* temp = symbTable.addOrUpdateSymbol(string($2),symbolType::INTtype,new symbol(string($4), symbolType::INTtype, 1,1),0 ,0);
+                                quadHandle.assign_op(operation::Assign, temp, new symbol($4, symbolType::INTtype, 1,1));
                             }
     |
     ID ASSIGN INT_CONST     {
-                                symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,new symbol(string($3), symbolType::INTtype, 1,1),0,0);
+                                symbol* temp = symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,new symbol(string($3), symbolType::INTtype, 1,1),0,0);
+                                quadHandle.assign_op(operation::Assign, temp, new symbol($3, symbolType::INTtype, 1,1));
                             }
-    |
-                            {;}
     ;
 
 for_loop_condition :
-    expression            {;}
-    |
-                          {;}
+    expression            {$$ = $1;}
     ;
 
 for_loop_increment :
     expression            {;}
     |
     assignment            {;}
-    |
-                          {;}
     ;
 
 while_loop :
-    WHILE '(' expression ')' {symbTable.changeScope(1);} '{' program '}'     {symbTable.changeScope(0);}
+    WHILE {string label = quadHandle.generateLabel(); quadHandle.writeToFile(label+":"); $<sval>$ = strdup(label.data());}  
+    '(' expression ')' {string label = quadHandle.generateLabel(); $<sval>$ = strdup(label.data()); quadHandle.jump_cond_op($4, label, false); symbTable.changeScope(1);} 
+    '{' program '}'    {quadHandle.jump_uncond_op($<sval>2); symbTable.changeScope(0); quadHandle.writeToFile(string($<sval>6)+":");}
     ;
 
 function_definition :
@@ -215,13 +224,21 @@ function_argument :
     ;
 
 if_statement :
-    one_level_if_statement
+    one_level_if_statement {quadHandle.writeToFile(string($1)+":");}
     |
-    one_level_if_statement ELSE {symbTable.changeScope(1);} '{' program '}' {symbTable.changeScope(0);}
+    one_level_if_statement {string label2 = quadHandle.generateLabel(); quadHandle.jump_uncond_op(label2); quadHandle.writeToFile(string($1)+":"); $<sval>$ = strdup(label2.data());} 
+                           ELSE 
+                           {symbTable.changeScope(1);} 
+                           '{' program '}' 
+                           {symbTable.changeScope(0); quadHandle.writeToFile(string($<sval>2)+":");}
     ;
 
 one_level_if_statement :
-    IF '(' expression ')' {symbTable.changeScope(1);} '{' program '}'    {symbTable.changeScope(0);}
+    IF '(' expression ')' {
+                            string label = quadHandle.generateLabel(); quadHandle.jump_cond_op($3, label, false); symbTable.changeScope(1); $<sval>$ = strdup(label.data());
+                          } 
+                          '{' program '}'    
+                          {symbTable.changeScope(0); $$ = $<sval>5;}
     ;
 
 switch_statement :
@@ -270,7 +287,7 @@ declaration :
 
 assignment :
     ID assign expression     %prec ASSIGN{
-                                            symbol* temp = symbTable.findSymbol(string($1));
+                                            symbol* temp = symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,$3,0,1);
                                             quadHandle.assign_op($2 ,temp, $3);
                                          }
     ;

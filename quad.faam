@@ -1,6 +1,0 @@
-inc x  t0
-plus x 5 t1
-inc x  t2
-inc y  t3
-inc counter  t4
-inc j  t5

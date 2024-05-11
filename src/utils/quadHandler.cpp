@@ -10,6 +10,15 @@ void QuadHandler::writeToFile(operation op, symbol* arg1, symbol* arg2, symbol* 
     quad_file << op_str << " " << arg1_name << " " << arg2_name << " " << result_name << endl;
 }
 
+void QuadHandler::writeToFile(string command) {
+    cout<< "Writing to file command" << endl;
+    quad_file << command << endl;
+}
+
+string QuadHandler::generateLabel() {
+    return "L" + to_string(labelCounter++);
+}
+
 void QuadHandler::implicitCast(symbol* arg1, symbol* arg2) {
 
     symbolType type1 = arg1->type;
@@ -165,4 +174,18 @@ symbol* QuadHandler::unary_op(operation op, symbol* arg1) {
 
     writeToFile(op, arg1, NULL, result);
     return result;
+}
+
+void QuadHandler::jump_cond_op(symbol* arg1, string label, bool onTrue) {
+    if(arg1->type == symbolType::VOIDtype) {
+        yyerror("Error: Invalid type for conditional jump.");
+    }
+
+    string command = "jmp " + label + " on " + arg1->name + " " + (onTrue ? "true" : "false");
+    writeToFile(command);
+}
+
+void QuadHandler::jump_uncond_op(string label) {
+    string command = "jmp " + label;
+    writeToFile(command);
 }

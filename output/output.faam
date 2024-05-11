@@ -1,132 +1,89 @@
 Starting...
-Initialization
-Error: Symbol sum not found.
-Symbol num found in scope 0
-Function_call
-Declaration
-ASSIGN
-Found symbol in scope 0
-Assignment
-Symbol x found in scope 0
------------------- Unary op ------------------
-1
 Writing to file
-inc x  t0
-Unary Expression
+assign 5  num
+Initialization
+Declaration
+Found symbol in scope 0
+Writing to file
+assign 10  x
+Assignment
 Symbol x found in scope 0
 INT INT
 Writing to file
-plus x 5 t1
-Initialization
-Initialization
-If statement start
-Symbol x found in scope 0
-Symbol y found in scope 0
-GT
-Changing scope
-Current scope: 0
-Entering new scope
-New scope: 1
-ASSIGN
-Found symbol in scope 1
-Assignment
-Changing scope
-Current scope: 1
-New scope: 0
-Changing scope
-Current scope: 0
-Entering new scope
-New scope: 2
-ASSIGN
-Found symbol in scope 2
-Assignment
-Changing scope
-Current scope: 2
-New scope: 0
-If statement end
-Initialization
-Switch case start
-Changing scope
-Current scope: 0
-Entering new scope
-New scope: 3
-Symbol x found in scope 3
------------------- Unary op ------------------
-1
+plus x 5 t0
 Writing to file
-inc x  t2
-Unary Expression
-Changing scope
-Current scope: 3
-New scope: 0
-Changing scope
-Current scope: 0
-Entering new scope
-New scope: 4
-Symbol y found in scope 4
------------------- Unary op ------------------
-1
+assign t0  y
+Initialization
 Writing to file
-inc y  t3
-Unary Expression
-Changing scope
-Current scope: 4
-New scope: 0
-Changing scope
-Current scope: 0
-Entering new scope
-New scope: 5
-ADD_ASSIGN
-Found symbol in scope 5
-Assignment
-Changing scope
-Current scope: 5
-New scope: 0
-Switch case end
+assign 0  z
+Initialization
+Writing to file
+assign 0  counter
 Initialization
 Do while loop start
 Changing scope
 Current scope: 0
 Entering new scope
-New scope: 6
-Symbol counter found in scope 6
+New scope: 1
+Writing to file command
+Symbol counter found in scope 1
 ------------------ Unary op ------------------
 1
 Writing to file
-inc counter  t4
+inc counter  t1
 Unary Expression
 Changing scope
-Current scope: 6
+Current scope: 1
 New scope: 0
-Symbol counter found in scope 6
-LT
+Symbol counter found in scope 1
+INT INT
+Writing to file
+lt counter 5 t2
+Writing to file command
 Do while loop end
+Writing to file
+assign 0  j
 Initialization
 While loop start
-Symbol j found in scope 6
-LT
+Writing to file command
+Symbol j found in scope 1
+INT INT
+Writing to file
+lt j 5 t3
+Writing to file command
 Changing scope
 Current scope: 0
 Entering new scope
-New scope: 7
-Symbol j found in scope 7
+New scope: 2
+Symbol j found in scope 2
 ------------------ Unary op ------------------
 1
 Writing to file
-inc j  t5
+inc j  t4
 Unary Expression
+Writing to file command
 Changing scope
-Current scope: 7
+Current scope: 2
 New scope: 0
+Writing to file command
 While loop end
-Error: Symbol sum not found.
-Function_call
-For loop start
-Changing scope
-Current scope: 0
-Entering new scope
-New scope: 8
-Error: Symbol k is not initialized.
-LT
-Error: Symbol k is not initialized.
------------------- Unary op ------------------
+Function_definition
+
+---------------
+
+Scope 0:
+Symbol: counter Symbol: j Symbol: num Symbol: x Symbol: y Symbol: z 
+
+
+---------------
+
+Scope 1:
+
+
+
+---------------
+
+Scope 2:
+
+
+Cleanup done
