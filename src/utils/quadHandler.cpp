@@ -42,11 +42,86 @@ void QuadHandler::implicitCast(symbol* arg1, symbol* arg2) {
     }
 }
 
+void QuadHandler::bitwiseCast(symbol* arg1, symbol* arg2) {
+
+    symbolType type1 = arg1->type;
+    symbolType type2 = arg2->type;
+
+    cout<<symbolTypeName[type1]<<" "<<symbolTypeName[type2]<<endl;
+    if(type1 != symbolType::INTtype && type1 != symbolType::BOOLtype)
+    {
+        yyerror(("Error: Invalid type "+ symbolTypeName[type1] + " for operation.").c_str());
+    }
+    if(type2 != symbolType::INTtype && type2 != symbolType::BOOLtype)
+    {
+        yyerror(("Error: Invalid type "+ symbolTypeName[type2] + " for operation.").c_str());
+    }
+
+    if(type1 == type2) return;
+    
+    if(type1 < type2) {
+        arg2->type = type1;
+        quad_file << "// CAST " << arg2->name << " to " << symbolTypeName[type1] << endl;
+    }
+    else {
+        arg1->type = type2;
+        quad_file << "// CAST " << arg1->name << " to " << symbolTypeName[type2] << endl;
+    }
+}
+
 symbol* QuadHandler::math_op(operation op, symbol* arg1, symbol* arg2) {
     implicitCast(arg1, arg2);
 
     string resultName = "t" + to_string(tempVarCounter++);
     symbol* result = new symbol(resultName, arg1->type, 1, 1);
+
+    // delete arg1;
+    // delete arg2;
+
+    writeToFile(op, arg1, arg2, result);
+    return result;
+}
+
+symbol* QuadHandler::bit_op(operation op, symbol* arg1, symbol* arg2) {
+    bitwiseCast(arg1, arg2);
+
+    string resultName = "t" + to_string(tempVarCounter++);
+    symbol* result = new symbol(resultName, arg1->type, 1, 1);
+
+    // delete arg1;
+    // delete arg2;
+
+    writeToFile(op, arg1, arg2, result);
+    return result;
+}
+
+symbol* QuadHandler::logic_op(operation op, symbol* arg1, symbol* arg2) {
+
+    if(op == operation::Not) {
+        if(arg1->type != symbolType::BOOLtype) {
+            yyerror("Error: Invalid type for logical operation.");
+        }
+    }
+    else if(arg1->type != symbolType::BOOLtype || arg2->type != symbolType::BOOLtype) {
+        yyerror("Error: Invalid type for logical operation.");
+    }
+
+    string resultName = "t" + to_string(tempVarCounter++);
+    symbol* result = new symbol(resultName, arg1->type, 1, 1);
+
+    // delete arg1;
+    // delete arg2;
+
+    writeToFile(op, arg1, arg2, result);
+    return result;
+}
+
+symbol* QuadHandler::rel_op(operation op, symbol* arg1, symbol* arg2) {
+
+    implicitCast(arg1, arg2);
+
+    string resultName = "t" + to_string(tempVarCounter++);
+    symbol* result = new symbol(resultName, symbolType::BOOLtype, 1, 1);
 
     // delete arg1;
     // delete arg2;
@@ -81,7 +156,7 @@ void QuadHandler::assign_op(operation op, symbol* dest, symbol* src) {
 symbol* QuadHandler::unary_op(operation op, symbol* arg1) {
     cout<<"------------------ Unary op ------------------"<<endl;
     if(arg1->type != symbolType::INTtype) {
-        yyerror("Error: Invalid type for operation.");
+        yyerror("Error: Invalid type for unary operation.");
     }
     string resultName = "t" + to_string(tempVarCounter++);
     symbol* result = new symbol(resultName, arg1->type, 1, 1);

@@ -6,7 +6,7 @@
 #include "utils/quadHandler.hpp"
 
 symbolTable symbTable = symbolTable();
-QuadHandler quadHandle = QuadHandler("quad.faam");
+QuadHandler quadHandle = QuadHandler("output/quad.faam");
 int symbolTable::numScopes = 0;
 vector<vector<symbolTable*>> symbolTable::symbolTableAdj = vector<vector<symbolTable*>>(1,vector<symbolTable*>());
 symbolTable* symbolTable::current = &symbTable;
@@ -20,6 +20,7 @@ int inFunction = 0;
     char *sval;
     symbol* symboll;
     symbolType symbolTypeType;
+    operation operationName;
 }
 
 /* Keywords */
@@ -79,6 +80,7 @@ int inFunction = 0;
 %type <symboll> unary_expression
 %type <symboll> literal
 %type <symbolTypeType> type
+%type <operationName> assign
 
 /* Grammar */
 %%
@@ -249,10 +251,15 @@ default_statement :
     ;
 
 initialization :
-    CONST type ID ASSIGN expression  {symbTable.addOrUpdateSymbol(string($3),$2,$5,1,1);}
+    CONST type ID ASSIGN expression {
+                                        symbol* temp = symbTable.addOrUpdateSymbol(string($3),$2,$5,1,1);
+                                        quadHandle.assign_op(operation::Assign, temp, $5);
+                                    }
     |
-    type ID ASSIGN expression        {
-        symbTable.addOrUpdateSymbol(string($2),$1,$4,0,1);}
+    type ID ASSIGN expression       {
+                                        symbol* temp = symbTable.addOrUpdateSymbol(string($2),$1,$4,0,1);
+                                        quadHandle.assign_op(operation::Assign, temp, $4);
+                                    }
     ;
 
 declaration :
@@ -263,22 +270,23 @@ declaration :
 
 assignment :
     ID assign expression     %prec ASSIGN{
-        symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,$3,0,1);
-        }
+                                            symbol* temp = symbTable.findSymbol(string($1));
+                                            quadHandle.assign_op($2 ,temp, $3);
+                                         }
     ;
 
 assign :
-    ASSIGN          { printf("ASSIGN\n"); }
+    ASSIGN          {$$ = operation::Assign;}
     |
-    ADD_ASSIGN      { printf("ADD_ASSIGN\n"); }
+    ADD_ASSIGN      {$$ = operation::Add_assign;}
     |
-    SUB_ASSIGN      { printf("SUB_ASSIGN\n"); }
+    SUB_ASSIGN      {$$ = operation::Sub_assign;}
     |
-    MUL_ASSIGN      { printf("MUL_ASSIGN\n"); }
+    MUL_ASSIGN      {$$ = operation::Mul_assign;}
     |
-    DIV_ASSIGN      { printf("DIV_ASSIGN\n"); }
+    DIV_ASSIGN      {$$ = operation::Div_assign;}
     |
-    MOD_ASSIGN      { printf("MOD_ASSIGN\n"); }
+    MOD_ASSIGN      {$$ = operation::Mod_assign;}
     ;
 
 type :
@@ -294,13 +302,13 @@ type :
     ;
 
 evaluate_expression :
-    evaluate_expression BIT_AND evaluate_expression         { printf("BIT_AND\n"); }
+    evaluate_expression BIT_AND evaluate_expression         {$$ = quadHandle.bit_op(operation::Bit_and, $1, $3);}
     |
-    evaluate_expression BIT_OR evaluate_expression          { printf("BIT_OR\n"); }
+    evaluate_expression BIT_OR evaluate_expression          {$$ = quadHandle.bit_op(operation::Bit_or, $1, $3);}
     |
-    evaluate_expression BIT_XOR evaluate_expression         { printf("BIT_XOR\n"); }
+    evaluate_expression BIT_XOR evaluate_expression         {$$ = quadHandle.bit_op(operation::Bit_xor, $1, $3);}
     |
-    evaluate_expression PLUS evaluate_expression            {$$ = quadHandle.math_op(operation::Plus, $1, $3); }
+    evaluate_expression PLUS evaluate_expression            {$$ = quadHandle.math_op(operation::Plus, $1, $3);}
     |
     evaluate_expression MINUS evaluate_expression           {$$ = quadHandle.math_op(operation::Minus, $1, $3);}
     |
@@ -336,23 +344,23 @@ math_or_value :
     ;
 
 condition :
-    expression OR expression                    { printf("OR\n"); }
+    expression OR expression                    {$$ = quadHandle.logic_op(operation::Or, $1, $3);}
     | 
-    expression AND expression                   { printf("AND\n"); }
+    expression AND expression                   {$$ = quadHandle.logic_op(operation::And, $1, $3);}
     | 
-    NOT expression                              { printf("NOT\n"); }
+    NOT expression                              {$$ = quadHandle.logic_op(operation::Not, $2, NULL);}
     | 
-    math_or_value EQ math_or_value              { printf("EQ\n"); }
+    math_or_value EQ math_or_value              {$$ = quadHandle.rel_op(operation::Eq, $1, $3);}
     | 
-    math_or_value NEQ math_or_value             { printf("NEQ\n"); }
+    math_or_value NEQ math_or_value             {$$ = quadHandle.rel_op(operation::Neq, $1, $3);}
     | 
-    math_or_value LT math_or_value              { printf("LT\n"); }
+    math_or_value LT math_or_value              {$$ = quadHandle.rel_op(operation::Lt, $1, $3);}
     | 
-    math_or_value GT math_or_value              { printf("GT\n"); }
+    math_or_value GT math_or_value              {$$ = quadHandle.rel_op(operation::Gt, $1, $3);}
     | 
-    math_or_value LTE math_or_value             { printf("LTE\n"); }
+    math_or_value LTE math_or_value             {$$ = quadHandle.rel_op(operation::Lte, $1, $3);}
     | 
-    math_or_value GTE math_or_value             { printf("GTE\n"); }
+    math_or_value GTE math_or_value             {$$ = quadHandle.rel_op(operation::Gte, $1, $3);}
     | 
     '(' condition ')'                           {;}
     ;
