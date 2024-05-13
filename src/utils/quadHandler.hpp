@@ -25,4 +25,5 @@ public:
     symbol* rel_op(operation op, symbol* arg1, symbol* arg2);
     void jump_cond_op(symbol* arg1, string label, bool onTrue);
     void jump_uncond_op(string label);
+    void declare_func_op(symbol* funcPrototype, vector<symbol*> args);
 };

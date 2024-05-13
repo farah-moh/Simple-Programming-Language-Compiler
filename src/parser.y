@@ -10,6 +10,8 @@ QuadHandler quadHandle = QuadHandler("output/quad.faam");
 int symbolTable::numScopes = 0;
 vector<vector<symbolTable*>> symbolTable::symbolTableAdj = vector<vector<symbolTable*>>(1,vector<symbolTable*>());
 symbolTable* symbolTable::current = &symbTable;
+map<string, vector<symbol*>> functionParameters;
+vector<symbol*> currentFunctionParameters;
 
 int yylex();
 
@@ -139,12 +141,12 @@ for_loop :
 
 for_loop_initialization :
     INT ID ASSIGN INT_CONST {
-                                symbol* temp = symbTable.addOrUpdateSymbol(string($2),symbolType::INTtype,new symbol(string($4), symbolType::INTtype, 1,1),0 ,0);
+                                symbol* temp = symbTable.addOrUpdateSymbol(string($2),symbolType::INTtype,new symbol(string($4), symbolType::INTtype, 1,1),0,1);
                                 quadHandle.assign_op(operation::Assign, temp, new symbol($4, symbolType::INTtype, 1,1));
                             }
     |
     ID ASSIGN INT_CONST     {
-                                symbol* temp = symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,new symbol(string($3), symbolType::INTtype, 1,1),0,0);
+                                symbol* temp = symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,new symbol(string($3), symbolType::INTtype, 1,1),0,1);
                                 quadHandle.assign_op(operation::Assign, temp, new symbol($3, symbolType::INTtype, 1,1));
                             }
     ;
@@ -166,13 +168,18 @@ while_loop :
     ;
 
 function_definition :
-    function_declaration_prototype { inFunction = 1;} '{' program '}' { inFunction = 0;}
+    function_declaration_prototype {if(inFunction) yyerror("You cannot declare a function inside a function."); inFunction = 1;} '{' program '}' { 
+        inFunction = 0; 
+        symbTable.changeScope(0); 
+        functionParameters[$<sval>1] = currentFunctionParameters;
+        currentFunctionParameters.clear();
+        }
     ;
 
-function_declaration_prototype : 
-    VOID ID '(' function_parameters_optional ')'  {;}
+function_declaration_prototype : //gives  warning: type clash on default action: error
+    VOID ID {symbTable.addOrUpdateSymbol(string($2),symbolType::VOIDtype,NULL,0,1); symbTable.changeScope(1);} '(' function_parameters_optional ')' {quadHandle.declare_func_op(symbTable.findSymbol(string($2)), currentFunctionParameters); $$=$2;}  // isInitialized = 1 because it is a function
     |
-    type ID '(' function_parameters_optional ')'  {;}
+    type ID {symbTable.addOrUpdateSymbol(string($2),$1,NULL,0,1); symbTable.changeScope(1);} '(' function_parameters_optional ')' {quadHandle.declare_func_op(symbTable.findSymbol(string($2)), currentFunctionParameters); $$=$2;}  // isInitialized = 1 because it is a function
     ;
 
 function_parameters_optional :
@@ -188,7 +195,7 @@ function_parameters :
     ;
 
 function_parameter:
-    type ID             {;}
+    type ID             {symbol* s = symbTable.addOrUpdateSymbol(string($2),$1,NULL,0,1); currentFunctionParameters.push_back(s);} // isInitialized = 1 because it is a function
     ;
 
 return_statement :

@@ -189,3 +189,11 @@ void QuadHandler::jump_uncond_op(string label) {
     string command = "jmp " + label;
     writeToFile(command);
 }
+
+void QuadHandler::declare_func_op(symbol* funcPrototype, vector<symbol*> args) {
+    string command = "proc " + symbolTypeName[funcPrototype->type] + " " + funcPrototype->name + " ";
+    for(auto arg : args) {
+        command += symbolTypeName[arg->type] + " " + arg->name + " ";
+    }
+    writeToFile(command);
+}

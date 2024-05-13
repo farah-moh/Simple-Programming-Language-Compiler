@@ -1,44 +1,145 @@
 Starting...
+Changing scope
+Current scope: 0
+Entering new scope
+New scope: 1
+Symbol sum found in scope 1
+Writing to file command
+Symbol x found in scope 1
+Symbol y found in scope 1
+INT INT
+Writing to file
+plus x y t0
+Changing scope
+Current scope: 1
+New scope: 0
+Function_definition
+Changing scope
+Current scope: 0
+Entering new scope
+New scope: 2
+Symbol main found in scope 2
+Writing to file command
 Writing to file
 assign 5  num
 Initialization
+Symbol sum found in scope 2
+Writing to file
+assign sum  result
+Symbol num found in scope 2
+Function_call
 Declaration
-Found symbol in scope 0
+Found symbol in scope 2
 Writing to file
 assign 10  x
 Assignment
-Symbol x found in scope 0
+Symbol x found in scope 2
 INT INT
 Writing to file
-plus x 5 t0
+plus x 5 t1
 Writing to file
-assign t0  y
+assign t1  y
 Initialization
 Writing to file
 assign 0  z
 Initialization
+If statement start
+Symbol x found in scope 2
+Symbol y found in scope 2
+INT INT
+Writing to file
+gt x y t2
+Writing to file command
+Changing scope
+Current scope: 2
+Entering new scope
+New scope: 3
+Found symbol in scope 3
+Writing to file
+assign 5  x
+Assignment
+Changing scope
+Current scope: 3
+New scope: 2
+Writing to file command
+Writing to file command
+Changing scope
+Current scope: 2
+Entering new scope
+New scope: 4
+Found symbol in scope 4
+Writing to file
+assign 5  y
+Assignment
+Changing scope
+Current scope: 4
+New scope: 2
+Writing to file command
+If statement end
+Writing to file
+assign 2  option
+Initialization
+Switch case start
+Changing scope
+Current scope: 2
+Entering new scope
+New scope: 5
+Symbol x found in scope 5
+------------------ Unary op ------------------
+1
+Writing to file
+inc x  t3
+Unary Expression
+Changing scope
+Current scope: 5
+New scope: 2
+Changing scope
+Current scope: 2
+Entering new scope
+New scope: 6
+Symbol y found in scope 6
+------------------ Unary op ------------------
+1
+Writing to file
+inc y  t4
+Unary Expression
+Changing scope
+Current scope: 6
+New scope: 2
+Changing scope
+Current scope: 2
+Entering new scope
+New scope: 7
+Found symbol in scope 7
+Writing to file
+add_assign 1  z
+Assignment
+Changing scope
+Current scope: 7
+New scope: 2
+Switch case end
 Writing to file
 assign 0  counter
 Initialization
 Do while loop start
 Changing scope
-Current scope: 0
+Current scope: 2
 Entering new scope
-New scope: 1
+New scope: 8
 Writing to file command
-Symbol counter found in scope 1
+Symbol counter found in scope 8
 ------------------ Unary op ------------------
 1
 Writing to file
-inc counter  t1
+inc counter  t5
 Unary Expression
 Changing scope
-Current scope: 1
-New scope: 0
-Symbol counter found in scope 1
+Current scope: 8
+New scope: 2
+Symbol counter found in scope 8
 INT INT
 Writing to file
-lt counter 5 t2
+lt counter 5 t6
 Writing to file command
 Do while loop end
 Writing to file
@@ -46,44 +147,145 @@ assign 0  j
 Initialization
 While loop start
 Writing to file command
-Symbol j found in scope 1
+Symbol j found in scope 8
 INT INT
 Writing to file
-lt j 5 t3
-Writing to file command
-Changing scope
-Current scope: 0
-Entering new scope
-New scope: 2
-Symbol j found in scope 2
------------------- Unary op ------------------
-1
-Writing to file
-inc j  t4
-Unary Expression
+lt j 5 t7
 Writing to file command
 Changing scope
 Current scope: 2
-New scope: 0
+Entering new scope
+New scope: 9
+Symbol j found in scope 9
+------------------ Unary op ------------------
+1
+Writing to file
+inc j  t8
+Unary Expression
+Writing to file command
+Changing scope
+Current scope: 9
+New scope: 2
 Writing to file command
 While loop end
+Symbol sum found in scope 9
+Writing to file
+assign sum  sum
+Function_call
+For loop start
+Changing scope
+Current scope: 2
+Entering new scope
+New scope: 10
+Writing to file
+assign 0  k
+Writing to file command
+Symbol k found in scope 10
+INT INT
+Writing to file
+lt k 5 t9
+Writing to file command
+Symbol k found in scope 10
+------------------ Unary op ------------------
+1
+Writing to file
+inc k  t10
+Found symbol in scope 10
+Writing to file
+add_assign 1  sum
+Assignment
+Writing to file command
+Changing scope
+Current scope: 10
+New scope: 2
+Writing to file command
+For loop end
+Scope start
+Changing scope
+Current scope: 2
+Entering new scope
+New scope: 11
+Writing to file
+assign 1  x
+Initialization
+Changing scope
+Current scope: 11
+New scope: 2
+Scope end
+Changing scope
+Current scope: 2
+New scope: 0
 Function_definition
 
 ---------------
 
 Scope 0:
-Symbol: counter Symbol: j Symbol: num Symbol: x Symbol: y Symbol: z 
+Symbol: main Symbol: sum 
 
 
 ---------------
 
 Scope 1:
-
+Symbol: x Symbol: y 
 
 
 ---------------
 
 Scope 2:
+Symbol: counter Symbol: j Symbol: num Symbol: option Symbol: result Symbol: x Symbol: y Symbol: z 
+
+
+---------------
+
+Scope 3:
+
+
+
+---------------
+
+Scope 4:
+
+
+
+---------------
+
+Scope 5:
+
+
+
+---------------
+
+Scope 6:
+
+
+
+---------------
+
+Scope 7:
+
+
+
+---------------
+
+Scope 8:
+
+
+
+---------------
+
+Scope 9:
+
+
+
+---------------
+
+Scope 10:
+Symbol: k 
+
+
+---------------
+
+Scope 11:
 
 
 Cleanup done

@@ -97,3 +97,13 @@ Operation Groups:
 4- Relational:		EQ NEQ LT GT LTE GTE											[2 ops, operation]
 5- Logical:			AND OR NOT														[2 ops, operation] # 2nd op is NULL if NOT
 6- Bitwise			BIT_AND BIT_OR BIT_XOR											[2 ops, operation]
+
+
+Quads for Functions:
+
+PROCEDURE int ReadNums INTEGER i REAL y
+	READ i
+	READ y
+	return symbol
+CALL ReadNums i y
+

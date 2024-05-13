@@ -1,18 +1,44 @@
+proc INT sum INT x INT y 
+plus x y t0
+proc INT main 
 assign 5  num
+assign sum  result
 assign 10  x
-plus x 5 t0
-assign t0  y
+plus x 5 t1
+assign t1  y
 // CAST 0 to CHAR
 assign 0  z
-assign 0  counter
-L0:
-inc counter  t1
-lt counter 5 t2
-jmp L0 on t2 true
-assign 0  j
-L1:
-lt j 5 t3
-jmp L2 on t3 false
-inc j  t4
+gt x y t2
+jmp L0 on t2 false
+assign 5  x
 jmp L1
+L0:
+assign 5  y
+L1:
+assign 2  option
+inc x  t3
+inc y  t4
+// CAST 1 to CHAR
+add_assign 1  z
+assign 0  counter
 L2:
+inc counter  t5
+lt counter 5 t6
+jmp L2 on t6 true
+assign 0  j
+L3:
+lt j 5 t7
+jmp L4 on t7 false
+inc j  t8
+jmp L3
+L4:
+assign sum  sum
+assign 0  k
+L5:
+lt k 5 t9
+jmp L6 on t9 false
+inc k  t10
+add_assign 1  sum
+jmp L5
+L6
+assign 1  x
