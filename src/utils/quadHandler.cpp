@@ -25,11 +25,11 @@ void QuadHandler::implicitCast(symbol* arg1, symbol* arg2) {
     symbolType type2 = arg2->type;
 
     cout<<symbolTypeName[type1]<<" "<<symbolTypeName[type2]<<endl;
-    if(type1 != symbolType::INTtype && type1 != symbolType::FLOATtype && type1 != symbolType::BOOLtype)
+    if(type1 != symbolType::INTtype && type1 != symbolType::FLOATtype && type1 != symbolType::BOOLtype && type1 != symbolType::CHARtype)
     {
         yyerror(("Error: Invalid type "+ symbolTypeName[type1] + " for operation.").c_str());
     }
-    if(type2 != symbolType::INTtype && type2 != symbolType::FLOATtype && type2 != symbolType::BOOLtype)
+    if(type2 != symbolType::INTtype && type2 != symbolType::FLOATtype && type2 != symbolType::BOOLtype && type2 != symbolType::CHARtype)
     {
         yyerror(("Error: Invalid type "+ symbolTypeName[type2] + " for operation.").c_str());
     }
@@ -140,6 +140,9 @@ symbol* QuadHandler::rel_op(operation op, symbol* arg1, symbol* arg2) {
 }
 
 void QuadHandler::assign_op(operation op, symbol* dest, symbol* src) {
+    if(op != operation::Assign) {
+        implicitCast(dest, src);
+    }
     if(dest->type == symbolType::VOIDtype || dest->type == symbolType::UNKNOWN || dest->type == symbolType::CONSTtype) {
         yyerror("Error: Can't assign to void type.");
     }
@@ -196,4 +199,45 @@ void QuadHandler::declare_func_op(symbol* funcPrototype, vector<symbol*> args) {
         command += symbolTypeName[arg->type] + " " + arg->name + " ";
     }
     writeToFile(command);
+}
+
+// cast arg2 to arg1
+bool QuadHandler::tryCast(symbol* arg1, symbolType type) {
+    if(arg1->type == type) return true;
+    if(arg1->type == symbolType::INTtype || arg1->type == symbolType::BOOLtype || arg1->type == symbolType::FLOATtype || arg1->type == symbolType::CHARtype) { 
+        if(type == symbolType::INTtype || type == symbolType::BOOLtype || type == symbolType::FLOATtype || type == symbolType::CHARtype) {
+            quad_file << "// CAST " << arg1->name << " to " << symbolTypeName[type] << endl;
+            arg1->type = arg1->type;
+            return true;
+        }
+    }
+    return false;
+}
+
+void QuadHandler::return_op(symbol* arg1, symbolType returnType) {
+    if(!arg1) {
+        if(returnType != symbolType::VOIDtype) {
+            yyerror("Error: Function return type is not void.");
+        }
+        writeToFile("return");
+        return;
+    }
+    if(returnType == symbolType::UNKNOWN) {
+        yyerror("Error: Return cannot be outside function.");
+    }
+    else if(!tryCast(arg1, returnType)) {
+        yyerror("Error: Invalid return type. Cannot cast value to function return type.");
+    }
+    string command = "return " + arg1->name + "\n\n";
+    writeToFile(command);
+}
+
+symbol* QuadHandler::call_func_op(symbol* funcPrototype, vector<symbol*> args) {
+    symbol* result = new symbol("t" + to_string(tempVarCounter++), funcPrototype->type, 1, 1);
+    string command = "call " + funcPrototype->name + " " + result->name + " ";
+    for(auto arg : args) {
+        command += arg->name + " ";
+    }
+    writeToFile(command);
+    return result;
 }

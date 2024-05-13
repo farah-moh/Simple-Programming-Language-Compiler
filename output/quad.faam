@@ -1,44 +1,53 @@
 proc INT sum INT x INT y 
 plus x y t0
+return t0
+
+
 proc INT main 
 assign 5  num
-assign sum  result
+// CAST 5.0 to INT
+call sum t1 num 5.0 
+assign t1  result
 assign 10  x
-plus x 5 t1
-assign t1  y
+plus x 5 t2
+assign t2  y
 // CAST 0 to CHAR
 assign 0  z
-gt x y t2
-jmp L0 on t2 false
+gt x y t3
+jmp L0 on t3 false
 assign 5  x
 jmp L1
 L0:
 assign 5  y
 L1:
 assign 2  option
-inc x  t3
-inc y  t4
-// CAST 1 to CHAR
+inc x  t4
+inc y  t5
+// CAST z to INT
 add_assign 1  z
 assign 0  counter
 L2:
-inc counter  t5
-lt counter 5 t6
-jmp L2 on t6 true
+inc counter  t6
+lt counter 5 t7
+jmp L2 on t7 true
 assign 0  j
 L3:
-lt j 5 t7
-jmp L4 on t7 false
-inc j  t8
+lt j 5 t8
+jmp L4 on t8 false
+inc j  t9
 jmp L3
 L4:
-assign sum  sum
+call sum t10 5 10 
+assign t10  sum
 assign 0  k
 L5:
-lt k 5 t9
-jmp L6 on t9 false
-inc k  t10
+lt k 5 t11
+jmp L6 on t11 false
+inc k  t12
 add_assign 1  sum
 jmp L5
 L6
 assign 1  x
+return 0
+
+

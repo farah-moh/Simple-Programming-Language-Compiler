@@ -4,7 +4,7 @@ int sum(int x, int y) {
 
 int main() {
     int num = 5;
-    int result = sum(num);
+    int result = sum(num, 5.0);
     
     int x;
     x = 10;

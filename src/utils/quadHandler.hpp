@@ -15,6 +15,7 @@ public:
 
     void implicitCast(symbol* arg1, symbol* arg2);
     void bitwiseCast(symbol* arg1, symbol* arg2);
+    bool tryCast(symbol* arg1, symbolType type);
     string generateLabel();
 
     symbol* math_op(operation op, symbol* arg1, symbol* arg2);
@@ -26,4 +27,6 @@ public:
     void jump_cond_op(symbol* arg1, string label, bool onTrue);
     void jump_uncond_op(string label);
     void declare_func_op(symbol* funcPrototype, vector<symbol*> args);
+    void return_op(symbol* arg1, symbolType returnType);
+    symbol* call_func_op(symbol* funcPrototype, vector<symbol*> args);
 };

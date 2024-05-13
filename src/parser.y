@@ -12,6 +12,8 @@ vector<vector<symbolTable*>> symbolTable::symbolTableAdj = vector<vector<symbolT
 symbolTable* symbolTable::current = &symbTable;
 map<string, vector<symbol*>> functionParameters;
 vector<symbol*> currentFunctionParameters;
+vector<symbol*> functionCallParameters;
+symbolType currFunctionReturn = symbolType::UNKNOWN;
 
 int yylex();
 
@@ -83,6 +85,9 @@ int inFunction = 0;
 %type <symboll> condition 
 %type <symboll> unary_expression
 %type <symboll> literal
+%type <symboll> assignment
+%type <symboll> initialization
+%type <symboll> function_call
 %type <symbolTypeType> type
 %type <operationName> assign
 
@@ -115,8 +120,8 @@ statement :
         | 
         function_definition       { printf("Function_definition\n"); }
         | 
-        function_call ';'         { printf("Function_call\n"); }
-        | 
+        //function_call ';'         { printf("Function_call\n"); }
+        
         return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
         |
         { printf("Scope start\n"); }          '{' {symbTable.changeScope(1);} program '}' {symbTable.changeScope(0);}    { printf("Scope end\n"); }
@@ -173,13 +178,14 @@ function_definition :
         symbTable.changeScope(0); 
         functionParameters[$<sval>1] = currentFunctionParameters;
         currentFunctionParameters.clear();
+        currFunctionReturn = symbolType::UNKNOWN;
         }
     ;
 
 function_declaration_prototype : //gives  warning: type clash on default action: error
-    VOID ID {symbTable.addOrUpdateSymbol(string($2),symbolType::VOIDtype,NULL,0,1); symbTable.changeScope(1);} '(' function_parameters_optional ')' {quadHandle.declare_func_op(symbTable.findSymbol(string($2)), currentFunctionParameters); $$=$2;}  // isInitialized = 1 because it is a function
+    VOID ID {symbTable.addOrUpdateSymbol(string($2),symbolType::VOIDtype,NULL,0,1); symbTable.changeScope(1); currFunctionReturn = symbolType::VOIDtype;} '(' function_parameters_optional ')' {quadHandle.declare_func_op(symbTable.findSymbol(string($2)), currentFunctionParameters); $$=$2;}  // isInitialized = 1 because it is a function
     |
-    type ID {symbTable.addOrUpdateSymbol(string($2),$1,NULL,0,1); symbTable.changeScope(1);} '(' function_parameters_optional ')' {quadHandle.declare_func_op(symbTable.findSymbol(string($2)), currentFunctionParameters); $$=$2;}  // isInitialized = 1 because it is a function
+    type ID {symbTable.addOrUpdateSymbol(string($2),$1,NULL,0,1); symbTable.changeScope(1); currFunctionReturn = $1;} '(' function_parameters_optional ')' {quadHandle.declare_func_op(symbTable.findSymbol(string($2)), currentFunctionParameters); $$=$2;}  // isInitialized = 1 because it is a function
     ;
 
 function_parameters_optional :
@@ -199,21 +205,27 @@ function_parameter:
     ;
 
 return_statement :
-    RETURN expression   {;}
+    RETURN expression   {quadHandle.return_op($2, currFunctionReturn);}
     |
-    RETURN assignment   {;}
-    |
-    RETURN
+    RETURN              {quadHandle.return_op(NULL, currFunctionReturn);}
     ;
 
 function_call : 
-    ID '(' function_arguments_optional ')'                      %prec FUNC{;}
-    |
-    assignment '(' function_arguments_optional ')'            %prec FUNC{;}
-    |
-    initialization '(' function_arguments_optional ')'       %prec FUNC{;}
-    ;
-
+    ID '(' function_arguments_optional ')' 
+    {
+        symbol* temp = symbTable.findSymbol(string($1));
+        if(!functionParameters.count(string(temp->name))) yyerror("There is not a function with this name.");
+        vector<symbol*> params = functionParameters[string(temp->name)];
+        if(params.size() != functionCallParameters.size()) yyerror("Number of parameters does not match.");
+        for(int i = 0; i < params.size(); i++)
+        {
+            if(!quadHandle.tryCast(functionCallParameters[i],params[i]->type)) yyerror("Parameter types do not match.");
+        }
+        symbol* ret = quadHandle.call_func_op(temp, functionCallParameters);
+        functionCallParameters.clear();
+        $$ = ret;
+    };
+    
 function_arguments_optional :
     function_arguments      {;}
     |
@@ -227,7 +239,7 @@ function_arguments :
     ;
 
 function_argument :
-    literal            {;}
+    literal            {functionCallParameters.push_back($1);}
     ;
 
 if_statement :
@@ -278,11 +290,13 @@ initialization :
     CONST type ID ASSIGN expression {
                                         symbol* temp = symbTable.addOrUpdateSymbol(string($3),$2,$5,1,1);
                                         quadHandle.assign_op(operation::Assign, temp, $5);
+                                        $$ = $5;
                                     }
     |
     type ID ASSIGN expression       {
                                         symbol* temp = symbTable.addOrUpdateSymbol(string($2),$1,$4,0,1);
                                         quadHandle.assign_op(operation::Assign, temp, $4);
+                                        $$ = $4;
                                     }
     ;
 
@@ -296,6 +310,7 @@ assignment :
     ID assign expression     %prec ASSIGN{
                                             symbol* temp = symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,$3,0,1);
                                             quadHandle.assign_op($2 ,temp, $3);
+                                            $$ = $3;
                                          }
     ;
 
@@ -399,6 +414,8 @@ expression :
     math_or_value                                    {;}
     |
     condition                                        {;}
+    |
+    function_call                                    {;}
     ;
 
 
@@ -421,7 +438,8 @@ literal :
 
 /* Error handling */
 void yyerror(const char *msg){
-  fprintf(stderr, "%s\n", msg);
+  extern int yylineno;
+    fprintf(stderr, "Error: %s at line %d\n", msg, yylineno);
   exit(1);
 }
 

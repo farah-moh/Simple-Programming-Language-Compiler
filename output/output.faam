@@ -10,6 +10,7 @@ Symbol y found in scope 1
 INT INT
 Writing to file
 plus x y t0
+Writing to file command
 Changing scope
 Current scope: 1
 New scope: 0
@@ -23,11 +24,12 @@ Writing to file command
 Writing to file
 assign 5  num
 Initialization
-Symbol sum found in scope 2
-Writing to file
-assign sum  result
 Symbol num found in scope 2
-Function_call
+Symbol sum found in scope 2
+Writing to file command
+Writing to file
+assign t1  result
+Initialization
 Declaration
 Found symbol in scope 2
 Writing to file
@@ -36,9 +38,9 @@ Assignment
 Symbol x found in scope 2
 INT INT
 Writing to file
-plus x 5 t1
+plus x 5 t2
 Writing to file
-assign t1  y
+assign t2  y
 Initialization
 Writing to file
 assign 0  z
@@ -48,7 +50,7 @@ Symbol x found in scope 2
 Symbol y found in scope 2
 INT INT
 Writing to file
-gt x y t2
+gt x y t3
 Writing to file command
 Changing scope
 Current scope: 2
@@ -88,7 +90,7 @@ Symbol x found in scope 5
 ------------------ Unary op ------------------
 1
 Writing to file
-inc x  t3
+inc x  t4
 Unary Expression
 Changing scope
 Current scope: 5
@@ -101,7 +103,7 @@ Symbol y found in scope 6
 ------------------ Unary op ------------------
 1
 Writing to file
-inc y  t4
+inc y  t5
 Unary Expression
 Changing scope
 Current scope: 6
@@ -111,6 +113,7 @@ Current scope: 2
 Entering new scope
 New scope: 7
 Found symbol in scope 7
+CHAR INT
 Writing to file
 add_assign 1  z
 Assignment
@@ -131,7 +134,7 @@ Symbol counter found in scope 8
 ------------------ Unary op ------------------
 1
 Writing to file
-inc counter  t5
+inc counter  t6
 Unary Expression
 Changing scope
 Current scope: 8
@@ -139,7 +142,7 @@ New scope: 2
 Symbol counter found in scope 8
 INT INT
 Writing to file
-lt counter 5 t6
+lt counter 5 t7
 Writing to file command
 Do while loop end
 Writing to file
@@ -150,7 +153,7 @@ Writing to file command
 Symbol j found in scope 8
 INT INT
 Writing to file
-lt j 5 t7
+lt j 5 t8
 Writing to file command
 Changing scope
 Current scope: 2
@@ -160,7 +163,7 @@ Symbol j found in scope 9
 ------------------ Unary op ------------------
 1
 Writing to file
-inc j  t8
+inc j  t9
 Unary Expression
 Writing to file command
 Changing scope
@@ -169,9 +172,10 @@ New scope: 2
 Writing to file command
 While loop end
 Symbol sum found in scope 9
+Writing to file command
 Writing to file
-assign sum  sum
-Function_call
+assign t10  sum
+Initialization
 For loop start
 Changing scope
 Current scope: 2
@@ -183,14 +187,15 @@ Writing to file command
 Symbol k found in scope 10
 INT INT
 Writing to file
-lt k 5 t9
+lt k 5 t11
 Writing to file command
 Symbol k found in scope 10
 ------------------ Unary op ------------------
 1
 Writing to file
-inc k  t10
+inc k  t12
 Found symbol in scope 10
+INT INT
 Writing to file
 add_assign 1  sum
 Assignment
@@ -212,6 +217,7 @@ Changing scope
 Current scope: 11
 New scope: 2
 Scope end
+Writing to file command
 Changing scope
 Current scope: 2
 New scope: 0
