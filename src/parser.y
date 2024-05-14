@@ -143,7 +143,7 @@ for_loop :
             for_loop_condition {string label = quadHandle.generateLabel(); $<sval>$ = strdup(label.data()); quadHandle.jump_cond_op($7, label, false);} ';' 
             for_loop_increment ')' 
             '{' program '}' 
-            {quadHandle.jump_uncond_op($<sval>2); symbTable.changeScope(0); quadHandle.writeToFile($<sval>8);};
+            {quadHandle.jump_uncond_op($<sval>2); symbTable.changeScope(0); quadHandle.writeToFile(string($<sval>8) + ":");};
         ;
 
 for_loop_initialization :
@@ -456,11 +456,13 @@ literal :
 void yyerror(const char *msg){
   extern int yylineno;
     fprintf(stderr, "Error: %s at line %d\n", msg, yylineno);
+    fprintf(stdout, "\nError: %s at line %d\n", msg, yylineno);
   exit(1);
 }
 
 void yywarn(const char *msg){
     fprintf(stderr, "Warning: %s\n", msg);
+    fprintf(stdout, "\nWarning: %s\n", msg);
 }
 
 

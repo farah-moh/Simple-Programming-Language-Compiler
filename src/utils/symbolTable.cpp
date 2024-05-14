@@ -38,7 +38,7 @@ symbol* symbolTable::addOrUpdateSymbol(string name, symbolType type, symbol* val
             // if it is a declaration
             if(type != UNKNOWN) {
                 if(firstIteration) {
-                    string error = "Error: Symbol " + name + " already exists in this scope.";
+                    string error = "Symbol " + name + " already exists in this scope.";
                     yyerror(error.c_str());
                     return NULL;
                 } 
@@ -51,7 +51,7 @@ symbol* symbolTable::addOrUpdateSymbol(string name, symbolType type, symbol* val
             // if it is a reference
             else {
                 if(foundSymbol->second->isConst) {
-                    string error = "Error: Symbol " + name + " is a constant, you can't update it.";
+                    string error = "Symbol " + name + " is a constant, you can't update it.";
                     yyerror(error.c_str());
                     return NULL;
                 }
@@ -70,7 +70,7 @@ symbol* symbolTable::addOrUpdateSymbol(string name, symbolType type, symbol* val
 
     // if the symbol is not found in any of the parent scopes, new symbol
     if(type == UNKNOWN) {
-        string error = "Error: Symbol " + name + " must be declared first.";
+        string error = "Symbol " + name + " must be declared first.";
         yyerror(error.c_str());
         return NULL;
     }
@@ -98,14 +98,14 @@ symbol* symbolTable::findSymbol(string name) {
                 return foundSymbol->second;
             }
             else {
-                string error = "Error: Symbol " + name + " is not initialized.";
+                string error = "Symbol " + name + " is not initialized.";
                 yyerror(error.c_str());
                 return NULL;
             }
         }
         root = root->parent;
     }
-    string error = "Error: Symbol " + name + " is not declared.";
+    string error = "Symbol " + name + " is not declared.";
     yyerror(error.c_str());
     return NULL;
 }
@@ -115,7 +115,7 @@ void symbolTable::printSymbolTable(symbolTable* root) {
     for(auto it2 = root->symbols.begin(); it2 != root->symbols.end(); it2++) {
             cout <<"Symbol: " <<it2->second->name << " ";
             if(it2->second->isUsed == false) {
-                string error = "Warning: Symbol " +it2->second->name+ " is declared but not used.";
+                string error = "Symbol ** " +it2->second->name+ " ** is declared but not used.";
                 yywarn(error.c_str());
             }
     }
