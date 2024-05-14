@@ -21,32 +21,41 @@ L0:
 assign 5  y
 L1:
 assign 2  option
-inc x  t4
-inc y  t5
+eq option 1 t4
+jmp L3 on t4 false
+inc x  t5
+jmp L2
+L3:
+eq option 2 t6
+jmp L4 on t6 false
+inc y  t7
+jmp L2
+L4:
 // CAST z to INT
 add_assign 1  z
-assign 0  counter
 L2:
-inc counter  t6
-lt counter 5 t7
-jmp L2 on t7 true
-assign 0  j
-L3:
-lt j 5 t8
-jmp L4 on t8 false
-inc j  t9
-jmp L3
-L4:
-call sum t10 5 10 
-assign t10  sum
-assign 0  k
+assign 0  counter
 L5:
-lt k 5 t11
-jmp L6 on t11 false
-inc k  t12
+inc counter  t8
+lt counter 5 t9
+jmp L5 on t9 true
+assign 0  j
+L6:
+lt j 5 t10
+jmp L7 on t10 false
+inc j  t11
+jmp L6
+L7:
+call sum t12 5 10 
+assign t12  sum
+assign 0  k
+L8:
+lt k 5 t13
+jmp L9 on t13 false
+inc k  t14
 add_assign 1  sum
-jmp L5
-L6
+jmp L8
+L9
 assign 1  x
 return 0
 

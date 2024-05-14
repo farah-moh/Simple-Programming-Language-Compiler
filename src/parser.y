@@ -14,6 +14,8 @@ map<string, vector<symbol*>> functionParameters;
 vector<symbol*> currentFunctionParameters;
 vector<symbol*> functionCallParameters;
 symbolType currFunctionReturn = symbolType::UNKNOWN;
+string currSwitchLabel = "";
+symbol* currSwitchVar = NULL;
 
 int yylex();
 
@@ -261,7 +263,9 @@ one_level_if_statement :
     ;
 
 switch_statement :
-    SWITCH '(' ID ')' '{' switch_program '}'    {symbTable.setUsed(symbTable.findSymbol(string($3)));}
+    {string label = quadHandle.generateLabel(); $<sval>$ = strdup(label.data()); currSwitchLabel = label;} 
+    SWITCH '(' ID ')' {currSwitchVar = symbTable.findSymbol(string($4));} '{' switch_program '}'    
+    {quadHandle.writeToFile(string($<sval>1)+":"); currSwitchLabel = ""; symbTable.setUsed(symbTable.findSymbol(string($4))); currSwitchVar = NULL;}
     ;
 
 switch_program :
@@ -279,7 +283,10 @@ case_statements :
     ;
 
 case_statement :
-    CASE literal ':' {symbTable.changeScope(1);} program {symbTable.changeScope(0);} BREAK ';'
+    CASE literal ':' {symbol* temp = quadHandle.rel_op(operation::Eq, currSwitchVar, $2); string label = quadHandle.generateLabel(); quadHandle.jump_cond_op(temp, label, false); symbTable.changeScope(1); $<sval>$ = strdup(label.data());} 
+    program {quadHandle.jump_uncond_op(currSwitchLabel); symbTable.changeScope(0);} 
+    BREAK ';' 
+    {quadHandle.writeToFile(string($<sval>4)+":");}
     ;
 
 default_statement :

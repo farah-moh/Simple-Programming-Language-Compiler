@@ -90,6 +90,11 @@ Writing to file
 assign 2  option
 Initialization
 Switch case start
+Symbol option found in scope 4
+INT INT
+Writing to file
+eq option 1 t4
+Writing to file command
 Changing scope
 Current scope: 2
 Entering new scope
@@ -98,12 +103,18 @@ Symbol x found in scope 5
 ------------------ Unary op ------------------
 1
 Writing to file
-inc x  t4
+inc x  t5
 Setting symbol x as used.
 Unary Expression
+Writing to file command
 Changing scope
 Current scope: 5
 New scope: 2
+Writing to file command
+INT INT
+Writing to file
+eq option 2 t6
+Writing to file command
 Changing scope
 Current scope: 2
 Entering new scope
@@ -112,12 +123,14 @@ Symbol y found in scope 6
 ------------------ Unary op ------------------
 1
 Writing to file
-inc y  t5
+inc y  t7
 Setting symbol y as used.
 Unary Expression
+Writing to file command
 Changing scope
 Current scope: 6
 New scope: 2
+Writing to file command
 Changing scope
 Current scope: 2
 Entering new scope
@@ -131,6 +144,7 @@ Assignment
 Changing scope
 Current scope: 7
 New scope: 2
+Writing to file command
 Symbol option found in scope 7
 Setting symbol option as used.
 Switch case end
@@ -147,7 +161,7 @@ Symbol counter found in scope 8
 ------------------ Unary op ------------------
 1
 Writing to file
-inc counter  t6
+inc counter  t8
 Setting symbol counter as used.
 Unary Expression
 Changing scope
@@ -157,7 +171,7 @@ Symbol counter found in scope 8
 Setting symbol counter as used.
 INT INT
 Writing to file
-lt counter 5 t7
+lt counter 5 t9
 Writing to file command
 Do while loop end
 Writing to file
@@ -169,7 +183,7 @@ Symbol j found in scope 8
 Setting symbol j as used.
 INT INT
 Writing to file
-lt j 5 t8
+lt j 5 t10
 Writing to file command
 Changing scope
 Current scope: 2
@@ -179,7 +193,7 @@ Symbol j found in scope 9
 ------------------ Unary op ------------------
 1
 Writing to file
-inc j  t9
+inc j  t11
 Setting symbol j as used.
 Unary Expression
 Writing to file command
@@ -191,7 +205,7 @@ While loop end
 Symbol sum found in scope 9
 Writing to file command
 Writing to file
-assign t10  sum
+assign t12  sum
 Initialization
 For loop start
 Changing scope
@@ -205,14 +219,14 @@ Symbol k found in scope 10
 Setting symbol k as used.
 INT INT
 Writing to file
-lt k 5 t11
+lt k 5 t13
 Writing to file command
 Symbol k found in scope 10
 Setting symbol k as used.
 ------------------ Unary op ------------------
 1
 Writing to file
-inc k  t12
+inc k  t14
 Found symbol in scope 10
 INT INT
 Writing to file
