@@ -8,6 +8,7 @@ using namespace std;
 
 
 void yyerror(const char* s);
+void yywarn(const char* s);
 
 enum operation { 
                 Plus,

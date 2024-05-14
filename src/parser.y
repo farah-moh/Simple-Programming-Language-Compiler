@@ -183,9 +183,9 @@ function_definition :
     ;
 
 function_declaration_prototype : //gives  warning: type clash on default action: error
-    VOID ID {symbTable.addOrUpdateSymbol(string($2),symbolType::VOIDtype,NULL,0,1); symbTable.changeScope(1); currFunctionReturn = symbolType::VOIDtype;} '(' function_parameters_optional ')' {quadHandle.declare_func_op(symbTable.findSymbol(string($2)), currentFunctionParameters); $$=$2;}  // isInitialized = 1 because it is a function
+    VOID ID {symbTable.setUsed(symbTable.addOrUpdateSymbol(string($2),symbolType::VOIDtype,NULL,0,1)); symbTable.changeScope(1); currFunctionReturn = symbolType::VOIDtype;} '(' function_parameters_optional ')' {quadHandle.declare_func_op(symbTable.findSymbol(string($2)), currentFunctionParameters); $$=$2;}  // isInitialized = 1 because it is a function
     |
-    type ID {symbTable.addOrUpdateSymbol(string($2),$1,NULL,0,1); symbTable.changeScope(1); currFunctionReturn = $1;} '(' function_parameters_optional ')' {quadHandle.declare_func_op(symbTable.findSymbol(string($2)), currentFunctionParameters); $$=$2;}  // isInitialized = 1 because it is a function
+    type ID {symbTable.setUsed(symbTable.addOrUpdateSymbol(string($2),$1,NULL,0,1)); symbTable.changeScope(1); currFunctionReturn = $1;} '(' function_parameters_optional ')' {quadHandle.declare_func_op(symbTable.findSymbol(string($2)), currentFunctionParameters); $$=$2;}  // isInitialized = 1 because it is a function
     ;
 
 function_parameters_optional :
@@ -261,7 +261,7 @@ one_level_if_statement :
     ;
 
 switch_statement :
-    SWITCH '(' ID ')' '{' switch_program '}'
+    SWITCH '(' ID ')' '{' switch_program '}'    {symbTable.setUsed(symbTable.findSymbol(string($3)));}
     ;
 
 switch_program :
@@ -307,11 +307,12 @@ declaration :
     ;
 
 assignment :
-    ID assign expression     %prec ASSIGN{
-                                            symbol* temp = symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,$3,0,1);
-                                            quadHandle.assign_op($2 ,temp, $3);
-                                            $$ = $3;
-                                         }
+    ID assign expression    {
+                                symbol* temp = symbTable.addOrUpdateSymbol(string($1),symbolType::UNKNOWN,$3,0,1);
+                                quadHandle.assign_op($2 ,temp, $3);
+                                $$ = $3;
+                                if($2 != operation::Assign) symbTable.setUsed(temp); // if += or -= or so, then the variable is used
+                            }
     ;
 
 assign :
@@ -369,7 +370,7 @@ evaluate_expression :
     |
     CHAR_CONST                                              {$$ = new symbol($1, symbolType::INTtype, 1,1);}
     |
-    ID                                                      {$$ = symbTable.findSymbol(string($1));}
+    ID                                                      {$$ = symbTable.setUsed(symbTable.findSymbol(string($1)));}
     |
     TRUE                                                    {$$ = new symbol("true", symbolType::BOOLtype, 1,1);}
     |
@@ -405,9 +406,17 @@ condition :
     ;
 
 unary_expression:
-    ID INC      {$$ = quadHandle.unary_op(operation::Inc, symbTable.findSymbol(string($1)));}
+    ID INC      {
+                    symbol *temp = symbTable.findSymbol(string($1));
+                    $$ = quadHandle.unary_op(operation::Inc, temp);
+                    symbTable.setUsed(temp);
+                }
     |
-    ID DEC      {$$ = quadHandle.unary_op(operation::Inc, symbTable.findSymbol(string($1)));}
+    ID DEC      {
+                    symbol *temp = symbTable.findSymbol(string($1));
+                    $$ = quadHandle.unary_op(operation::Inc, temp);
+                    symbTable.setUsed(temp);
+                }
     ;
 
 expression :
@@ -420,7 +429,7 @@ expression :
 
 
 literal :
-    ID                          {$$ = symbTable.findSymbol(string($1));}
+    ID                          {$$ = symbTable.setUsed(symbTable.findSymbol(string($1)));}
     |
     INT_CONST                   {$$ = new symbol($1, symbolType::INTtype, 1,1);}
     |
@@ -441,6 +450,10 @@ void yyerror(const char *msg){
   extern int yylineno;
     fprintf(stderr, "Error: %s at line %d\n", msg, yylineno);
   exit(1);
+}
+
+void yywarn(const char *msg){
+    fprintf(stderr, "Warning: %s\n", msg);
 }
 
 

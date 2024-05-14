@@ -82,6 +82,12 @@ symbol* symbolTable::addOrUpdateSymbol(string name, symbolType type, symbol* val
     
 }
 
+symbol* symbolTable::setUsed(symbol* sym) {
+    cout<< "Setting symbol " << sym->name << " as used." << endl;
+    sym->isUsed = true;
+    return sym;
+}
+
 symbol* symbolTable::findSymbol(string name) {
     symbolTable *root = current;
     while (root != NULL) {
@@ -92,13 +98,15 @@ symbol* symbolTable::findSymbol(string name) {
                 return foundSymbol->second;
             }
             else {
-                cout << "Error: Symbol " << name << " is not initialized." << endl;
+                string error = "Error: Symbol " + name + " is not initialized.";
+                yyerror(error.c_str());
                 return NULL;
             }
         }
         root = root->parent;
     }
-    cout << "Error: Symbol " << name << " not found." << endl;
+    string error = "Error: Symbol " + name + " is not declared.";
+    yyerror(error.c_str());
     return NULL;
 }
 
@@ -106,6 +114,10 @@ void symbolTable::printSymbolTable(symbolTable* root) {
     cout << "\n---------------\n\nScope " << root->scope << ":" << endl;
     for(auto it2 = root->symbols.begin(); it2 != root->symbols.end(); it2++) {
             cout <<"Symbol: " <<it2->second->name << " ";
+            if(it2->second->isUsed == false) {
+                string error = "Warning: Symbol " +it2->second->name+ " is declared but not used.";
+                yywarn(error.c_str());
+            }
     }
     cout<<endl<<endl;
     for(auto it = symbolTableAdj[root->scope].begin(); it != symbolTableAdj[root->scope].end(); it++) {

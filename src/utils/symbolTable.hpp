@@ -55,18 +55,21 @@ public:
     symbolType type;
     bool isConst;
     bool isInitializated;
+    bool isUsed;
 
     symbol() {
         name = "";
         isConst = false;
         isInitializated = false;
+        isUsed = false;
     }
 
-    symbol(string name, symbolType type, bool isConst, bool isInitializated) {
+    symbol(string name, symbolType type, bool isConst, bool isInitializated, bool isUsed = false) {
         this->name = name;
         this->type = type;
         this->isConst = isConst;
         this->isInitializated = isInitializated;
+        this->isUsed = isUsed;
     }
 };
 
@@ -99,6 +102,8 @@ public:
     void changeScope(bool direction);
 
     struct symbol* addOrUpdateSymbol(string name, symbolType type, symbol* value, bool isConst, bool isInitialization);
+
+    symbol* setUsed(symbol* sym);
 
     struct symbol* findSymbol(string name);
 
