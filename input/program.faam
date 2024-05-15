@@ -3,6 +3,7 @@ int sum(int x, int y) {
 }
 
 int main() {
+    // amin 3ayz comment hena AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     int num = 5;
     int result = sum(num, 5.0);
     

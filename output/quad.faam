@@ -5,13 +5,13 @@ return t0
 
 proc INT main 
 assign 5  num
-// CAST 5.0 to INT
+CAST 5.0 to INT
 call sum t1 num 5.0 
 assign t1  result
 assign 10  x
 plus x 5 t2
 assign t2  y
-// CAST 0 to CHAR
+CAST 0 to CHAR
 assign 0  z
 gt x y t3
 jmp L0 on t3 false
@@ -31,7 +31,7 @@ jmp L4 on t6 false
 inc y  t7
 jmp L2
 L4:
-// CAST z to INT
+CAST z to INT
 add_assign 1  z
 L2:
 assign 0  counter
@@ -55,7 +55,7 @@ jmp L9 on t13 false
 inc k  t14
 add_assign 1  sum
 jmp L8
-L9
+L9:
 assign 1  x
 return 0
 

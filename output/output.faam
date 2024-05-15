@@ -272,7 +272,9 @@ Symbol: x Symbol: y
 ---------------
 
 Scope 2:
-Symbol: counter Symbol: j Symbol: num Symbol: option Symbol: result Symbol: x Symbol: y Symbol: z 
+Symbol: counter Symbol: j Symbol: num Symbol: option Symbol: result 
+Warning: Symbol ** result ** is declared but not used.
+Symbol: x Symbol: y Symbol: z 
 
 
 ---------------
