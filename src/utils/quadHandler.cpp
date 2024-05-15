@@ -2,16 +2,13 @@
 
 void QuadHandler::writeToFile(operation op, symbol* arg1, symbol* arg2, symbol* result) {
     string op_str = operationToString[op];
-    cout<< "Writing to file" << endl;
     string arg1_name = !arg1 ? "" : arg1->name;
     string arg2_name = !arg2 ? "" : arg2->name;
     string result_name = !result ? "" : result->name;
-    cout<<op_str<<" "<<arg1_name<<" "<<arg2_name<<" "<<result_name<<endl;
     quad_file << op_str << " " << arg1_name << " " << arg2_name << " " << result_name << endl;
 }
 
 void QuadHandler::writeToFile(string command) {
-    cout<< "Writing to file command" << endl;
     quad_file << command << endl;
 }
 
@@ -24,7 +21,6 @@ void QuadHandler::implicitCast(symbol* arg1, symbol* arg2) {
     symbolType type1 = arg1->type;
     symbolType type2 = arg2->type;
 
-    cout<<symbolTypeName[type1]<<" "<<symbolTypeName[type2]<<endl;
     if(type1 != symbolType::INTtype && type1 != symbolType::FLOATtype && type1 != symbolType::BOOLtype && type1 != symbolType::CHARtype)
     {
         yyerror(("Invalid type "+ symbolTypeName[type1] + " for operation.").c_str());
@@ -56,7 +52,6 @@ void QuadHandler::bitwiseCast(symbol* arg1, symbol* arg2) {
     symbolType type1 = arg1->type;
     symbolType type2 = arg2->type;
 
-    cout<<symbolTypeName[type1]<<" "<<symbolTypeName[type2]<<endl;
     if(type1 != symbolType::INTtype && type1 != symbolType::BOOLtype)
     {
         yyerror(("Invalid type "+ symbolTypeName[type1] + " for operation.").c_str());
@@ -166,14 +161,11 @@ void QuadHandler::assign_op(operation op, symbol* dest, symbol* src) {
 }
 
 symbol* QuadHandler::unary_op(operation op, symbol* arg1) {
-    cout<<"------------------ Unary op ------------------"<<endl;
     if(arg1->type != symbolType::INTtype) {
         yyerror("Invalid type for unary operation.");
     }
     string resultName = "t" + to_string(tempVarCounter++);
     symbol* result = new symbol(resultName, arg1->type, 1, 1);
-
-    cout<<arg1->type<<endl;
 
     writeToFile(op, arg1, NULL, result);
     return result;

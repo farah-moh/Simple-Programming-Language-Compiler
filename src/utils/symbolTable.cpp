@@ -8,10 +8,7 @@ symbolTable::symbolTable() {
 
 // direction = true means enter a new scope downward, false means leave the current scope and go to the parent scope
 void symbolTable::changeScope(bool direction) {
-    cout<< "Changing scope" << endl;
-    cout<< "Current scope: " << current->scope << endl;
     if (direction == 1) {
-        cout<< "Entering new scope" << endl;
         symbolTable* newTable = new symbolTable();
         newTable->parent = current;
         symbolTableAdj[current->scope].push_back(newTable);
@@ -22,7 +19,7 @@ void symbolTable::changeScope(bool direction) {
     } else {
         current = current->parent;
     }
-    cout<< "New scope: " << current->scope << endl;
+    cout<< "Entered new scope: " << current->scope << endl;
 }
 
 /*
@@ -56,7 +53,6 @@ symbol* symbolTable::addOrUpdateSymbol(string name, symbolType type, symbol* val
                     return NULL;
                 }
                 else {
-                    cout<<"Found symbol in scope "<<numScopes<<endl;
                     foundSymbol->second->isInitializated = isInitialization;
                     return foundSymbol->second;
                 }
@@ -83,7 +79,6 @@ symbol* symbolTable::addOrUpdateSymbol(string name, symbolType type, symbol* val
 }
 
 symbol* symbolTable::setUsed(symbol* sym) {
-    cout<< "Setting symbol " << sym->name << " as used." << endl;
     sym->isUsed = true;
     return sym;
 }
@@ -94,7 +89,6 @@ symbol* symbolTable::findSymbol(string name) {
         auto foundSymbol = root->symbols.find(name);
         if(foundSymbol != root->symbols.end()) {
             if(foundSymbol->second->isInitializated == true) {
-                cout << "Symbol " << name << " found in scope " << numScopes << endl;
                 return foundSymbol->second;
             }
             else {
