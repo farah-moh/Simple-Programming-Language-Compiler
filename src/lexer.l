@@ -95,7 +95,8 @@ ID	[a-zA-z][a-zA-z0-9_]*
 (\'[^\']\')                 {yylval.sval = strdup(yytext); return CHAR_CONST;}
 
     /* comments */
-("//".*)                    {return COMMENT;}
+(\/\/.*)                    ;
+(\/\*(.|\n|\r)*\*\/)        ;
 
     /* whitespace */
 [ \t\n]                     {;}
