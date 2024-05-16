@@ -107,3 +107,8 @@ PROCEDURE int ReadNums INTEGER i REAL y
 	return symbol
 CALL ReadNums i y
 
+
+TODO: 
+1- not
+2- function same prototype
+3- break & continue

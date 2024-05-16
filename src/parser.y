@@ -123,7 +123,7 @@ statement :
         function_definition       { printf("Function_definition\n"); }
         | 
         function_call ';'         { printf("Function_call\n"); }
-        
+        |
         return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
         |
         { printf("Scope start\n"); }          '{' {symbTable.changeScope(1);} program '}' {symbTable.changeScope(0);}    { printf("Scope end\n"); }

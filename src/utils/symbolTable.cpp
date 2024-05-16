@@ -107,7 +107,8 @@ symbol* symbolTable::findSymbol(string name) {
 void symbolTable::printSymbolTable(symbolTable* root) {
     cout << "\n---------------\n\nScope " << root->scope << ":" << endl;
     for(auto it2 = root->symbols.begin(); it2 != root->symbols.end(); it2++) {
-            cout <<"Symbol: " <<it2->second->name << " ";
+            if(it2->second->isConst) cout<<"const ";
+            cout<<symbolTypeName[it2->second->type] << " " << it2->second->name << endl;
             if(it2->second->isUsed == false) {
                 string error = "Symbol ** " +it2->second->name+ " ** is declared but not used.";
                 yywarn(error.c_str());
