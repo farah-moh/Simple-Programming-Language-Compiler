@@ -1,0 +1,26 @@
+proc INT main 
+assign 0  x
+jmp L0 on 1 false
+assign 0  y
+L0:
+eq x 1 t0
+jmp L1 on t0 false
+assign 1  y
+jmp L2
+L1:
+assign 2  y
+L2:
+eq x 1 t1
+jmp L3 on t1 false
+jmp L4
+L3:
+assign 2  y
+L4:
+eq x 1 t2
+jmp L5 on t2 false
+assign 1  y
+jmp L6
+L5:
+L6:
+inc y  
+return 0

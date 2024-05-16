@@ -1,0 +1,19 @@
+proc INT sum INT x INT y 
+plus x y t0
+return t0
+
+
+proc VOID voo INT x 
+inc x  
+return
+proc INT main 
+assign 0  x
+assign 1  a
+assign 2  b
+call sum t1 a b 
+assign t1  c
+call voo t2 x 
+call sum t3 a b 
+return 0
+
+

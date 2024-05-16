@@ -1,0 +1,92 @@
+Starting...
+Entered new scope: 1
+Initialization
+Declaration
+If statement start
+Entered new scope: 2
+Assignment
+Entered new scope: 1
+If statement end
+If statement start
+Entered new scope: 3
+Assignment
+Entered new scope: 1
+Entered new scope: 4
+Assignment
+Entered new scope: 1
+If statement end
+If statement start
+Entered new scope: 5
+Entered new scope: 1
+Entered new scope: 6
+Assignment
+Entered new scope: 1
+If statement end
+If statement start
+Entered new scope: 7
+Assignment
+Entered new scope: 1
+Entered new scope: 8
+Entered new scope: 1
+If statement end
+Unary Expression
+Entered new scope: 0
+Function_definition
+
+---------------
+
+Scope 0:
+INT main
+
+
+
+---------------
+
+Scope 1:
+INT x
+INT y
+
+
+
+---------------
+
+Scope 2:
+
+
+
+---------------
+
+Scope 3:
+
+
+
+---------------
+
+Scope 4:
+
+
+
+---------------
+
+Scope 5:
+
+
+
+---------------
+
+Scope 6:
+
+
+
+---------------
+
+Scope 7:
+
+
+
+---------------
+
+Scope 8:
+
+
+Cleanup done

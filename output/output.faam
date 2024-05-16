@@ -58,21 +58,34 @@ Function_definition
 ---------------
 
 Scope 0:
-Symbol: main Symbol: sum 
+INT main
+INT sum
+
 
 
 ---------------
 
 Scope 1:
-Symbol: x Symbol: y 
+INT x
+INT y
+
 
 
 ---------------
 
 Scope 2:
-Symbol: counter Symbol: j Symbol: num Symbol: option Symbol: result 
+INT counter
+INT j
+INT num
+INT option
+INT result
+
 Warning: Symbol ** result ** is declared but not used.
-Symbol: x Symbol: y Symbol: z 
+INT sum
+INT x
+INT y
+INT z
+
 
 
 ---------------
@@ -120,12 +133,16 @@ Scope 9:
 ---------------
 
 Scope 10:
-Symbol: k 
+INT k
+
 
 
 ---------------
 
 Scope 11:
+INT x
+
+Warning: Symbol ** x ** is declared but not used.
 
 
 Cleanup done

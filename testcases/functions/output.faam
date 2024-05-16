@@ -1,0 +1,54 @@
+Starting...
+Entered new scope: 1
+Entered new scope: 0
+Function_definition
+Entered new scope: 2
+Unary Expression
+Entered new scope: 0
+Function_definition
+Entered new scope: 3
+Initialization
+Initialization
+Initialization
+Initialization
+Function_call
+Function_call
+Entered new scope: 0
+Function_definition
+
+---------------
+
+Scope 0:
+INT main
+INT sum
+VOID voo
+
+
+
+---------------
+
+Scope 1:
+INT x
+INT y
+
+
+
+---------------
+
+Scope 2:
+INT x
+
+
+
+---------------
+
+Scope 3:
+INT a
+INT b
+INT c
+
+Warning: Symbol ** c ** is declared but not used.
+INT x
+
+
+Cleanup done
