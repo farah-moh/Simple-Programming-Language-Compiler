@@ -162,15 +162,14 @@ void QuadHandler::assign_op(operation op, symbol* dest, symbol* src) {
 }
 
 symbol* QuadHandler::unary_op(operation op, symbol* arg1) {
-    if(arg1->type != symbolType::INTtype) {
-        yyerror("Invalid type for unary operation.");
+    symbolType type1 = arg1->type;
+    if(type1 != symbolType::INTtype && type1 != symbolType::FLOATtype)
+    {
+        yyerror(("Invalid type "+ symbolTypeName[type1] + " for operation.").c_str());
     }
-    string resultName = "t" + to_string(tempVarCounter++);
-    symbol* result = new symbol(resultName, arg1->type, 1, 1);
-    tempVars.push_back(result);
 
-    writeToFile(op, arg1, NULL, result);
-    return result;
+    writeToFile(op, arg1, NULL, NULL);
+    return arg1;
 }
 
 void QuadHandler::jump_cond_op(symbol* arg1, string label, bool onTrue) {
