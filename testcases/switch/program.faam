@@ -1,0 +1,52 @@
+int main(){
+    int x=0;
+    int option=3;
+    
+    switch (option) {
+        case 1:
+            x = 1;
+            break;
+        case 2:
+            x = 2;
+            break;
+    }
+    
+    switch (option) {
+        default:
+            x+=1;
+            break;
+    }
+    int oho = x;
+    oho++;
+
+    switch (oho){
+        case 1:
+            x = 1;
+            break;
+        case 2:
+            x = 2;
+            break;
+        default:
+            x = 0;
+            break;
+    }
+
+    //switch (y){
+    //    x = 9;
+    //    break;
+    //}
+
+    int y = 0;
+    //switch (y){
+    //    x = 4;
+    //}
+
+    //switch (y){
+    //    case 1:
+    //        x = 1;
+    //    case 2:
+    //    x = 2;
+    //}
+
+return 0;
+}

@@ -1,0 +1,17 @@
+assign 0  i
+assign 0  sum
+proc INT main 
+L0:
+add_assign i  sum
+inc i  
+lt i 10 t0
+jmp L0 on t0 true
+L1:
+assign 1  j
+L2:
+inc j  
+lte j 5 t1
+jmp L2 on t1 true
+inc i  
+lte i 5 t2
+jmp L1 on t2 true

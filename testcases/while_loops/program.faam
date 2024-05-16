@@ -1,0 +1,33 @@
+int i = 0;
+int sum = 0;
+
+int main() {
+    // Basic while loop
+    while (i < 10) {
+        sum += i;  // Sum of numbers from 0 to 9
+        i++;
+    }
+
+    // Nested while loop
+    while (i <= 5) {
+        int j = 1;
+        while (j <= 5) {
+            j++;
+        }
+        i++;
+    }
+
+    /*
+    while (i < 10 { 
+        sum += i;
+        i++;
+    }
+    */
+
+    /*
+    while () { 
+        sum += i;
+        i++;
+    }
+    */
+}

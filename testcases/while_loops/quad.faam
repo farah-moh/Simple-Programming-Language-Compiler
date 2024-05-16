@@ -1,0 +1,23 @@
+assign 0  i
+assign 0  sum
+proc INT main 
+L0:
+lt i 10 t0
+jmp L1 on t0 false
+add_assign i  sum
+inc i  
+jmp L0
+L1:
+L2:
+lte i 5 t1
+jmp L3 on t1 false
+assign 1  j
+L4:
+lte j 5 t2
+jmp L5 on t2 false
+inc j  
+jmp L4
+L5:
+inc i  
+jmp L2
+L3:

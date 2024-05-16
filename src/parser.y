@@ -122,7 +122,7 @@ statement :
         | 
         function_definition       { printf("Function_definition\n"); }
         | 
-        //function_call ';'         { printf("Function_call\n"); }
+        function_call ';'         { printf("Function_call\n"); }
         
         return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
         |

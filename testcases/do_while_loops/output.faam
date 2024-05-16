@@ -1,0 +1,54 @@
+Starting...
+Initialization
+Initialization
+Entered new scope: 1
+Do while loop start
+Entered new scope: 2
+Assignment
+Unary Expression
+Entered new scope: 1
+Do while loop end
+Do while loop start
+Entered new scope: 3
+Initialization
+Do while loop start
+Entered new scope: 4
+Unary Expression
+Entered new scope: 3
+Do while loop end
+Unary Expression
+Entered new scope: 1
+Do while loop end
+Entered new scope: 0
+Function_definition
+
+---------------
+
+Scope 0:
+Symbol: i Symbol: main Symbol: sum 
+
+
+---------------
+
+Scope 1:
+
+
+
+---------------
+
+Scope 2:
+
+
+
+---------------
+
+Scope 3:
+Symbol: j 
+
+
+---------------
+
+Scope 4:
+
+
+Cleanup done

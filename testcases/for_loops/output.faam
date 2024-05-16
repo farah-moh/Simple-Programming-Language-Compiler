@@ -1,0 +1,73 @@
+Starting...
+Entered new scope: 1
+Initialization
+For loop start
+Entered new scope: 2
+Assignment
+Entered new scope: 1
+For loop end
+For loop start
+Entered new scope: 3
+Assignment
+Entered new scope: 1
+For loop end
+For loop start
+Entered new scope: 4
+Assignment
+Entered new scope: 1
+For loop end
+For loop start
+Entered new scope: 5
+Assignment
+Entered new scope: 1
+For loop end
+For loop start
+Entered new scope: 6
+Assignment
+Entered new scope: 1
+For loop end
+Entered new scope: 0
+Function_definition
+
+---------------
+
+Scope 0:
+Symbol: main 
+
+
+---------------
+
+Scope 1:
+Symbol: n 
+
+
+---------------
+
+Scope 2:
+Symbol: a 
+
+
+---------------
+
+Scope 3:
+Symbol: a 
+
+
+---------------
+
+Scope 4:
+Symbol: a 
+
+
+---------------
+
+Scope 5:
+Symbol: a 
+
+
+---------------
+
+Scope 6:
+Symbol: a 
+
+Cleanup done

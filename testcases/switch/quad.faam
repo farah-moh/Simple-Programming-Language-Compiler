@@ -1,0 +1,34 @@
+proc INT main 
+assign 0  x
+assign 3  option
+eq option 1 t0
+jmp L1 on t0 false
+assign 1  x
+jmp L0
+L1:
+eq option 2 t1
+jmp L2 on t1 false
+assign 2  x
+jmp L0
+L2:
+L0:
+add_assign 1  x
+L3:
+assign x  oho
+inc oho  
+eq oho 1 t2
+jmp L5 on t2 false
+assign 1  x
+jmp L4
+L5:
+eq oho 2 t3
+jmp L6 on t3 false
+assign 2  x
+jmp L4
+L6:
+assign 0  x
+L4:
+assign 0  y
+return 0
+
+

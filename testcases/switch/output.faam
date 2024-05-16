@@ -1,0 +1,131 @@
+Starting...
+Entered new scope: 1
+Entered new scope: 0
+Function_definition
+Entered new scope: 2
+Initialization
+Initialization
+Declaration
+Assignment
+Initialization
+Initialization
+If statement start
+Entered new scope: 3
+Assignment
+Entered new scope: 2
+Entered new scope: 4
+Assignment
+Entered new scope: 2
+If statement end
+Initialization
+Switch case start
+Entered new scope: 5
+Unary Expression
+Entered new scope: 2
+Entered new scope: 6
+Unary Expression
+Entered new scope: 2
+Entered new scope: 7
+Assignment
+Entered new scope: 2
+Switch case end
+Initialization
+Do while loop start
+Entered new scope: 8
+Unary Expression
+Entered new scope: 2
+Do while loop end
+Initialization
+While loop start
+Entered new scope: 9
+Unary Expression
+Entered new scope: 2
+While loop end
+Initialization
+For loop start
+Entered new scope: 10
+Assignment
+Entered new scope: 2
+For loop end
+Scope start
+Entered new scope: 11
+Initialization
+Entered new scope: 2
+Scope end
+Entered new scope: 0
+Function_definition
+
+---------------
+
+Scope 0:
+Symbol: main Symbol: sum 
+
+
+---------------
+
+Scope 1:
+Symbol: x Symbol: y 
+
+
+---------------
+
+Scope 2:
+Symbol: counter Symbol: j Symbol: num Symbol: option Symbol: result 
+Warning: Symbol ** result ** is declared but not used.
+Symbol: x Symbol: y Symbol: z 
+
+
+---------------
+
+Scope 3:
+
+
+
+---------------
+
+Scope 4:
+
+
+
+---------------
+
+Scope 5:
+
+
+
+---------------
+
+Scope 6:
+
+
+
+---------------
+
+Scope 7:
+
+
+
+---------------
+
+Scope 8:
+
+
+
+---------------
+
+Scope 9:
+
+
+
+---------------
+
+Scope 10:
+Symbol: k 
+
+
+---------------
+
+Scope 11:
+
+
+Cleanup done
