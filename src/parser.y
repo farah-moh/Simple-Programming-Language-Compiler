@@ -308,8 +308,6 @@ initialization :
     ;
 
 declaration :
-    CONST type ID   {symbTable.addOrUpdateSymbol(string($3),$2,NULL,1,0);}
-    |
     type ID         {symbTable.addOrUpdateSymbol(string($2),$1,NULL,0,0);}
     ;
 
