@@ -124,8 +124,6 @@ statement :
         | 
         function_call ';'         { printf("Function_call\n"); }
         |
-        return_statement ';'      { if (!(inFunction)) yyerror("Return statement outside function"); }
-        |
         { printf("Scope start\n"); }          '{' {symbTable.changeScope(1);} program '}' {symbTable.changeScope(0);}    { printf("Scope end\n"); }
         ;
 
@@ -175,7 +173,7 @@ while_loop :
     ;
 
 function_definition :
-    function_declaration_prototype {if(inFunction) yyerror("You cannot declare a function inside a function."); inFunction = 1;} '{' program '}' { 
+    function_declaration_prototype {if(inFunction) yyerror("You cannot declare a function inside a function."); inFunction = 1;} '{' program return_statement ';' '}' { 
         inFunction = 0; 
         symbTable.changeScope(0); 
         functionParameters[$<sval>1] = currentFunctionParameters;
