@@ -47,7 +47,7 @@ public:
         float fval;
     };
     ~constNode() {}
-} ;
+};
 
 class symbol {
 public:

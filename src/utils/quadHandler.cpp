@@ -149,7 +149,7 @@ void QuadHandler::assign_op(operation op, symbol* dest, symbol* src) {
     if(src->type == symbolType::STRINGtype && dest->type == symbolType::STRINGtype) {
         writeToFile(op, src, NULL, dest);
     }
-    else if(src->type == symbolType::STRINGtype && dest->type != symbolType::STRINGtype) {
+    else if((src->type == symbolType::STRINGtype && dest->type != symbolType::STRINGtype) || (src->type != symbolType::STRINGtype && dest->type == symbolType::STRINGtype)) {
         yyerror("Invalid type for assignment.");
     }
     else {
@@ -200,7 +200,6 @@ bool QuadHandler::tryCast(symbol* arg1, symbolType type) {
     if(arg1->type == symbolType::INTtype || arg1->type == symbolType::BOOLtype || arg1->type == symbolType::FLOATtype || arg1->type == symbolType::CHARtype) { 
         if(type == symbolType::INTtype || type == symbolType::BOOLtype || type == symbolType::FLOATtype || type == symbolType::CHARtype) {
             quad_file << "CAST " << arg1->name << " to " << symbolTypeName[type] << endl;
-            arg1->type = arg1->type;
             return true;
         }
     }
