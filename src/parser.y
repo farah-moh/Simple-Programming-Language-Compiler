@@ -371,23 +371,23 @@ evaluate_expression :
     |
     '(' evaluate_expression ')'                             {;}
     |
-    FLOAT_CONST                                             {$$ = new symbol($1, symbolType::FLOATtype,1,1);}
+    FLOAT_CONST                                             {symbol* temp = new symbol($1, symbolType::FLOATtype,1,1); quadHandle.tempVars.push_back(temp);$$ = temp;}
     |
-    INT_CONST                                               {$$ = new symbol($1, symbolType::INTtype, 1,1);}                        
+    INT_CONST                                               {symbol* temp = new symbol($1, symbolType::INTtype, 1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}                        
     |
-    CHAR_CONST                                              {$$ = new symbol($1, symbolType::INTtype, 1,1);}
+    CHAR_CONST                                              {symbol* temp = new symbol($1, symbolType::INTtype, 1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}
     |
     ID                                                      {$$ = symbTable.setUsed(symbTable.findSymbol(string($1)));}
     |
-    TRUE                                                    {$$ = new symbol("true", symbolType::BOOLtype, 1,1);}
+    TRUE                                                    {symbol* temp = new symbol("true", symbolType::BOOLtype, 1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}
     |
-    FALSE                                                   {$$ = new symbol("false", symbolType::BOOLtype, 1,1);}
+    FALSE                                                   {symbol* temp = new symbol("false", symbolType::BOOLtype, 1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}
     ;
 
 math_or_value :
     evaluate_expression                 {;}
     |
-    STRING_CONST                        {$$ = new symbol($1, symbolType::STRINGtype, 1,1);}
+    STRING_CONST                        {symbol* temp = new symbol($1, symbolType::STRINGtype, 1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}
     ;
 
 condition :
@@ -438,17 +438,17 @@ expression :
 literal :
     ID                          {$$ = symbTable.setUsed(symbTable.findSymbol(string($1)));}
     |
-    INT_CONST                   {$$ = new symbol($1, symbolType::INTtype, 1,1);}
+    INT_CONST                   {symbol* temp = new symbol($1, symbolType::INTtype, 1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}
     |
-    FLOAT_CONST                 {$$ = new symbol($1, symbolType::FLOATtype, 1,1);}
+    FLOAT_CONST                 {symbol* temp = new symbol($1, symbolType::FLOATtype, 1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}
     |
-    CHAR_CONST                  {$$ = new symbol($1, symbolType::INTtype, 1,1);}
+    CHAR_CONST                  {symbol* temp = new symbol($1, symbolType::INTtype, 1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}
     |
-    STRING_CONST                {$$ = new symbol($1, symbolType::STRINGtype, 1,1);}
+    STRING_CONST                {symbol* temp = new symbol($1, symbolType::STRINGtype, 1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}
     |
-    TRUE                        {$$ = new symbol("true", symbolType::BOOLtype,1,1);}
+    TRUE                        {symbol* temp = new symbol("true", symbolType::BOOLtype,1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}
     |
-    FALSE                       {$$ = new symbol("false", symbolType::BOOLtype,1,1);}
+    FALSE                       {symbol* temp = new symbol("false", symbolType::BOOLtype,1,1); quadHandle.tempVars.push_back(temp); $$ = temp;}
     ;
 %%
 
@@ -481,7 +481,8 @@ int main(int argc, char *argv[]){
 
     yyparse();
     symbTable.printSymbolTable(symbolTable::current);
-    symbolTable::cleanup();
+    symbolTable::cleanUp();
+    quadHandle.cleanUp();
     cout<<"Cleanup done"<<endl;
 
     return 0;

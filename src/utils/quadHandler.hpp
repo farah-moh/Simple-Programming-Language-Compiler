@@ -6,6 +6,7 @@ class QuadHandler {
     int tempVarCounter = 0;
     int labelCounter = 0;
 public:
+    vector<symbol*> tempVars;
     QuadHandler(string file) {
         quad_file = ofstream(file);
     }
@@ -29,4 +30,6 @@ public:
     void declare_func_op(symbol* funcPrototype, vector<symbol*> args);
     void return_op(symbol* arg1, symbolType returnType);
     symbol* call_func_op(symbol* funcPrototype, vector<symbol*> args);
+
+    void cleanUp();
 };

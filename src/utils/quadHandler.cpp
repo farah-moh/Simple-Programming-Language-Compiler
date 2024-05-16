@@ -78,6 +78,7 @@ symbol* QuadHandler::math_op(operation op, symbol* arg1, symbol* arg2) {
 
     string resultName = "t" + to_string(tempVarCounter++);
     symbol* result = new symbol(resultName, arg1->type, 1, 1);
+    tempVars.push_back(result);
 
     // delete arg1;
     // delete arg2;
@@ -91,6 +92,7 @@ symbol* QuadHandler::bit_op(operation op, symbol* arg1, symbol* arg2) {
 
     string resultName = "t" + to_string(tempVarCounter++);
     symbol* result = new symbol(resultName, arg1->type, 1, 1);
+    tempVars.push_back(result);
 
     // delete arg1;
     // delete arg2;
@@ -112,6 +114,7 @@ symbol* QuadHandler::logic_op(operation op, symbol* arg1, symbol* arg2) {
 
     string resultName = "t" + to_string(tempVarCounter++);
     symbol* result = new symbol(resultName, arg1->type, 1, 1);
+    tempVars.push_back(result);
 
     // delete arg1;
     // delete arg2;
@@ -126,9 +129,7 @@ symbol* QuadHandler::rel_op(operation op, symbol* arg1, symbol* arg2) {
 
     string resultName = "t" + to_string(tempVarCounter++);
     symbol* result = new symbol(resultName, symbolType::BOOLtype, 1, 1);
-
-    // delete arg1;
-    // delete arg2;
+    tempVars.push_back(result);
 
     writeToFile(op, arg1, arg2, result);
     return result;
@@ -166,6 +167,7 @@ symbol* QuadHandler::unary_op(operation op, symbol* arg1) {
     }
     string resultName = "t" + to_string(tempVarCounter++);
     symbol* result = new symbol(resultName, arg1->type, 1, 1);
+    tempVars.push_back(result);
 
     writeToFile(op, arg1, NULL, result);
     return result;
@@ -226,10 +228,17 @@ void QuadHandler::return_op(symbol* arg1, symbolType returnType) {
 
 symbol* QuadHandler::call_func_op(symbol* funcPrototype, vector<symbol*> args) {
     symbol* result = new symbol("t" + to_string(tempVarCounter++), funcPrototype->type, 1, 1);
+    tempVars.push_back(result);
     string command = "call " + funcPrototype->name + " " + result->name + " ";
     for(auto arg : args) {
         command += arg->name + " ";
     }
     writeToFile(command);
     return result;
+}
+
+void QuadHandler::cleanUp() {
+    for(auto tempVar : tempVars) {
+        if(tempVar) delete tempVar;
+    }
 }

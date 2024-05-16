@@ -123,7 +123,7 @@ symbolTable::~symbolTable() {
     
 }
 
-void symbolTable::cleanup() {
+void symbolTable::cleanUp() {
     for(int i = 0; i <= numScopes; i++) {
         for(auto i : symbolTableAdj[i]) {
             if(i) delete i;

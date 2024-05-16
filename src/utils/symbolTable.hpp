@@ -109,7 +109,7 @@ public:
 
     void printSymbolTable(symbolTable* table);
 
-    static void cleanup();
+    static void cleanUp();
 
     ~symbolTable();
 };
