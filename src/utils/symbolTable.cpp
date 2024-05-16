@@ -41,8 +41,8 @@ symbol* symbolTable::addOrUpdateSymbol(string name, symbolType type, symbol* val
                 } 
                 else {
                     symbol* newSymbol =  new symbol(name, type, isConst, isInitialization);
-                    root->symbols.insert({name, newSymbol});
-                    return root->symbols[name];
+                    current->symbols.insert({name, newSymbol});
+                    return current->symbols[name];
                 }
             }
             // if it is a reference
