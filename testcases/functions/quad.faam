@@ -6,10 +6,16 @@ return t0
 proc VOID voo INT x 
 inc x  
 return
+proc STRING fun INT z STRING y 
+inc z  
+return y
+
+
 proc INT main 
 assign 0  x
 assign 1  a
 assign 2  b
+assign "hehe"  ff
 call sum t1 a b 
 assign t1  c
 call voo t2 x 

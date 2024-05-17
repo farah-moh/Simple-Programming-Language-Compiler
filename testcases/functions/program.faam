@@ -7,6 +7,11 @@ void voo(int x){
     return;
 }
 
+string fun(int z, string y){
+    z++;
+    return y;
+}
+
 //bool wrong(int x){
 //    x++;
 //    return x;
@@ -25,10 +30,12 @@ int main() {
     int x = 0;
     int a = 1;
     int b = 2;
+    string ff = "hehe";
   // bool wrongCall = wrong();
   //bool d = wrong2(a);
     int c = sum(a,b);
     voo(x);
+  //fun(ff,a);
     sum(a,b);
     return 0;
 }

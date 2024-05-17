@@ -7,6 +7,11 @@ Unary Expression
 Entered new scope: 0
 Function_definition
 Entered new scope: 3
+Unary Expression
+Entered new scope: 0
+Function_definition
+Entered new scope: 4
+Initialization
 Initialization
 Initialization
 Initialization
@@ -19,6 +24,7 @@ Function_definition
 ---------------
 
 Scope 0:
+STRING fun
 INT main
 INT sum
 VOID voo
@@ -43,11 +49,20 @@ INT x
 ---------------
 
 Scope 3:
+STRING y
+INT z
+
+
+
+---------------
+
+Scope 4:
 INT a
 INT b
 INT c
 
-Warning: Symbol ** c ** is declared but not used.
+STRING ff
+
 INT x
 
 
